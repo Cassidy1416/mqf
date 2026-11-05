@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -77,19 +78,33 @@ def request_json(params: dict[str, str | int], target: Path, pause: float) -> di
     if target.exists():
         return json.loads(target.read_text())
     target.parent.mkdir(parents=True, exist_ok=True)
-    url = f"{API}?{urlencode(params)}"
+    query = urlencode(params).replace("%2C", ",")
+    url = f"{API}?{query}"
     last_error: Exception | None = None
     for attempt in range(4):
         try:
-            request = Request(url, headers={"User-Agent": "ap26-q4-trade-network/1.0"})
-            with urlopen(request, timeout=45) as response:
-                payload = json.loads(response.read().decode("utf-8"))
+            result = subprocess.run(
+                ["curl", "--fail", "--silent", "--show-error", "--location", "--retry", "2", "--retry-all-errors", "--max-time", "30", url],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            payload = json.loads(result.stdout)
             target.write_text(json.dumps(payload, ensure_ascii=False, indent=2))
             time.sleep(pause)
             return payload
         except Exception as error:
             last_error = error
-            time.sleep(2 ** attempt)
+            try:
+                request = Request(url, headers={"User-Agent": "ap26-q4-trade-network/1.0"})
+                with urlopen(request, timeout=30) as response:
+                    payload = json.loads(response.read().decode("utf-8"))
+                target.write_text(json.dumps(payload, ensure_ascii=False, indent=2))
+                time.sleep(pause)
+                return payload
+            except Exception as fallback_error:
+                last_error = fallback_error
+                time.sleep(2 ** attempt)
     raise RuntimeError(f"Comtrade request failed: {url}") from last_error
 
 
@@ -133,7 +148,7 @@ def build_snapshot(years: list[int], top_partners: int, pause: float) -> tuple[l
         for reporter in nodes:
             target = RAW / f"reporter_{reporter}_{year}_X.json"
             payload = request_json(
-                {"reporterCode": reporter, "period": year, "flowCode": "X", "cmdCode": "TOTAL", "partner2Code": 0, "customsCode": "C00"},
+                {"reporterCode": reporter, "period": year, "flowCode": "X", "cmdCode": "TOTAL", "partnerCode": ",".join(str(code) for code in nodes), "partner2Code": 0, "customsCode": "C00"},
                 target,
                 pause,
             )
