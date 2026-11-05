@@ -4,37 +4,45 @@
     "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
     "rates": "ak.macro_china_shibor_all"
   },
-  "retrieved_at": "2026-11-05T22:57:57.346883+08:00",
+  "retrieved_at": "2026-11-05T23:11:44.028861+08:00",
   "contracts": [
     "io2310",
     "io2311",
     "io2312",
     "io2401",
+    "io2403",
     "io2511",
     "io2512",
     "io2601",
     "io2602"
   ],
-  "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, with thirteen evenly spaced strikes and both call and put daily closes.",
+  "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, plus a shared 2023-10-23 through 2023-10-27 calendar block for four overlapping expiries when available; thirteen evenly spaced strikes and both call and put daily closes.",
+  "calendar_block": [
+    "2023-10-23",
+    "2023-10-24",
+    "2023-10-25",
+    "2023-10-26",
+    "2023-10-27"
+  ],
   "date_range": [
-    "2022-12-19",
+    "2023-03-20",
     "2026-01-13"
   ],
-  "expiry_count": 8,
-  "sample_date_count": 196,
-  "quote_rows": 1023,
+  "expiry_count": 9,
+  "sample_date_count": 177,
+  "quote_rows": 1134,
   "artifacts": {
     "data/clean/option_quotes.csv": {
-      "sha256": "e0857d9b4090dfad27282002fc979d09b9b53e5502ed793eec9312cd7f8b449f",
-      "bytes": 62061
+      "sha256": "71a161ccddb93e61b6a988c2314f064f61dd3ba028304e1b5d749b7181a4b2a4",
+      "bytes": 69034
     },
     "data/clean/underlying.csv": {
-      "sha256": "001863f3d6f0d3d4e6b7207c202ec9d4a720a24007962a8af764107f177dea41",
-      "bytes": 14823
+      "sha256": "ca291bbcdea8837bfebd64ac1f241765d3ca980937128aa27196f1cfbdf642dd",
+      "bytes": 13648
     },
     "data/clean/rates.csv": {
-      "sha256": "64422d667f0740c8d8bfdb91889ab2049d33d3118be5414a37edf26cd0b71aa6",
-      "bytes": 12871
+      "sha256": "1d4a2f258ba64a496d2570d80d8aaf359a8015faac99ab9ee04686f340a3247a",
+      "bytes": 11845
     }
   }
 }

@@ -16,7 +16,9 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
 CLEAN = ROOT / "data" / "clean"
-CONTRACTS = ["io2310", "io2311", "io2312", "io2401", "io2511", "io2512", "io2601", "io2602"]
+CONTRACTS = ["io2310", "io2311", "io2312", "io2401", "io2403", "io2511", "io2512", "io2601", "io2602"]
+COMMON_CALENDAR_BASES = {"io2311", "io2312", "io2401", "io2403"}
+COMMON_CALENDAR_DATES = {date(2023, 10, day) for day in range(23, 28)}
 
 
 def third_friday(year: int, month: int) -> date:
@@ -79,7 +81,9 @@ def fetch_contract_quotes(base: str, strikes_per_expiry: int, sleep_seconds: flo
             daily = daily.dropna(subset=["date", "close"])
             first_date = daily["date"].min()
             window_dates = sorted(daily.loc[daily["date"] <= first_date + pd.Timedelta(days=31), "date"].dt.date.unique())
-            sample_dates = window_dates[:5] if len(window_dates) >= 5 else sorted(daily["date"].dt.date.unique())[:5]
+            available_dates = set(daily["date"].dt.date.unique())
+            common_dates = sorted(available_dates & COMMON_CALENDAR_DATES) if base in COMMON_CALENDAR_BASES else []
+            sample_dates = common_dates if len(common_dates) >= 3 else (window_dates[:5] if len(window_dates) >= 5 else sorted(available_dates)[:5])
             daily = daily[daily["date"].dt.date.isin(sample_dates)].copy()
             daily["contract_base"] = base
             daily["contract_symbol"] = symbol
@@ -152,7 +156,8 @@ def main() -> None:
         },
         "retrieved_at": datetime.now().astimezone().isoformat(),
         "contracts": CONTRACTS,
-        "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, with thirteen evenly spaced strikes and both call and put daily closes.",
+        "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, plus a shared 2023-10-23 through 2023-10-27 calendar block for four overlapping expiries when available; thirteen evenly spaced strikes and both call and put daily closes.",
+        "calendar_block": sorted(date_value.isoformat() for date_value in COMMON_CALENDAR_DATES),
         "date_range": [min_date, max_date],
         "expiry_count": int(options["expiry"].nunique()),
         "sample_date_count": int(options["date"].nunique()),
