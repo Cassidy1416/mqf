@@ -43,6 +43,15 @@
 - Approach 2: 12 Torch-SVI groups; mean Torch/SciPy objectives approximately `1.97e-08`; dropout SVI median error 0.067% and neural median error 0.204%.
 - Generated self-contained HTML figures, comparison output, and the fixed-grid surface CSV.
 
+## Git milestones
+
+- `05ce588` — `chore: add project agent contract`
+- `51aad37` — `chore: pin Q1 environment and repository layout`
+- `8f174ce` — `data: add historical China option snapshot pipeline`
+- `b8d607e` — `data: add overlapping expiry calendar snapshot`
+- `a43ea82` — `feat: implement constrained IV surface calibration pipelines`
+- The final reviewed state is tagged `submission` after the report and validation check.
+
 ## Reproduction commands
 
 ```bash
