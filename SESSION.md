@@ -42,6 +42,14 @@
 - Best observed learned AUC: 0.810 at `p=2,q=0.5`, dimension 64; best heuristic AUC: 0.750.
 - Generated self-contained Plotly HTML figures and the comparison table.
 
+## Git milestones
+
+- `df9ccd4` — `chore: add project agent contract`
+- `552efa2` — `data: add reproducible Comtrade snapshot pipeline`
+- `a56fe23` — `data: commit ten-year trade network snapshot`
+- `cea9a60` — `feat: implement trade network analytics and node embeddings`
+- The final reviewed state is tagged `submission` after the report and validation check.
+
 ## Reproduction commands
 
 ```bash
