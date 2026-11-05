@@ -1,0 +1,220 @@
+{
+  "params": {
+    "seed": 42,
+    "svi_epochs": 300,
+    "neural_epochs": 250,
+    "lambda_grid": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ]
+  },
+  "metrics": {
+    "filtered_quotes": 225,
+    "iv_quotes": 224,
+    "iv_divergence_count": 1,
+    "torch_svi_groups": 12,
+    "convergence": [
+      {
+        "group": "2023-07-28|2023-10-20",
+        "scipy_objective": 6.904741185072448e-09,
+        "torch_objective": 6.907767247099628e-09,
+        "scipy_seconds": 0.023517375000665197,
+        "torch_seconds": 0.0592276250008581,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-23|2023-11-17",
+        "scipy_objective": 6.625246201694245e-10,
+        "torch_objective": 6.628230742045105e-10,
+        "scipy_seconds": 0.007778707999023027,
+        "torch_seconds": 0.03608679100034351,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-23|2023-12-15",
+        "scipy_objective": 2.8710408957730888e-09,
+        "torch_objective": 2.871032744877766e-09,
+        "scipy_seconds": 0.004596916000082274,
+        "torch_seconds": 0.03552329199919768,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-24|2023-11-17",
+        "scipy_objective": 1.6200519126712522e-09,
+        "torch_objective": 1.6202762465056253e-09,
+        "scipy_seconds": 0.007623625000633183,
+        "torch_seconds": 0.03562529200098652,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-24|2023-12-15",
+        "scipy_objective": 9.861196283537308e-11,
+        "torch_objective": 9.86126735824655e-11,
+        "scipy_seconds": 0.00826841599882755,
+        "torch_seconds": 0.0346942920004949,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-25|2023-11-17",
+        "scipy_objective": 5.850185337120491e-09,
+        "torch_objective": 5.850188333766937e-09,
+        "scipy_seconds": 0.00770945899967046,
+        "torch_seconds": 0.03515762499955599,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-25|2023-12-15",
+        "scipy_objective": 7.659159530843386e-10,
+        "torch_objective": 7.660759249183968e-10,
+        "scipy_seconds": 0.006191792001118301,
+        "torch_seconds": 0.035731207999560866,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-26|2023-11-17",
+        "scipy_objective": 5.198818602926652e-09,
+        "torch_objective": 5.1988946481174025e-09,
+        "scipy_seconds": 0.011003624998920714,
+        "torch_seconds": 0.03512841600058891,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-26|2023-12-15",
+        "scipy_objective": 3.575493625534331e-10,
+        "torch_objective": 3.575865992200278e-10,
+        "scipy_seconds": 0.010121417000846122,
+        "torch_seconds": 0.03489541599992663,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-27|2023-11-17",
+        "scipy_objective": 3.977730448414928e-09,
+        "torch_objective": 3.977753681994045e-09,
+        "scipy_seconds": 0.006061209000108647,
+        "torch_seconds": 0.03537362499992014,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2023-10-27|2023-12-15",
+        "scipy_objective": 7.773422828048042e-09,
+        "torch_objective": 7.774000998495012e-09,
+        "scipy_seconds": 0.0075667500004783506,
+        "torch_seconds": 0.035757875000854256,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      },
+      {
+        "group": "2025-11-24|2026-02-20",
+        "scipy_objective": 2.0081311157677323e-07,
+        "torch_objective": 2.008132895525705e-07,
+        "scipy_seconds": 0.004015667000203393,
+        "torch_seconds": 0.03550845800054958,
+        "scipy_iterations": 1,
+        "torch_epochs": 300
+      }
+    ],
+    "neural_ablations": {
+      "lambda_b=0,lambda_t=0": {
+        "fit_seconds": 0.24614733300040825,
+        "final_loss": {
+          "loss": 1.4225394806999248e-05,
+          "price_loss": 1.4225394806999248e-05,
+          "butterfly_penalty": 0.0,
+          "calendar_penalty": 0.0
+        },
+        "median_relative_price_error": 0.0017317081801593304,
+        "p95_relative_price_error": 0.00926443375647068,
+        "arbitrage": {
+          "butterfly_min_g": 0.6299325823783875,
+          "butterfly_violations": 0,
+          "calendar_violations": 0
+        }
+      },
+      "lambda_b=1,lambda_t=0": {
+        "fit_seconds": 0.23169312500067463,
+        "final_loss": {
+          "loss": 1.4225394806999248e-05,
+          "price_loss": 1.4225394806999248e-05,
+          "butterfly_penalty": 0.0,
+          "calendar_penalty": 0.0
+        },
+        "median_relative_price_error": 0.0017317081801593304,
+        "p95_relative_price_error": 0.00926443375647068,
+        "arbitrage": {
+          "butterfly_min_g": 0.6299325823783875,
+          "butterfly_violations": 0,
+          "calendar_violations": 0
+        }
+      },
+      "lambda_b=0,lambda_t=1": {
+        "fit_seconds": 0.22675700000036159,
+        "final_loss": {
+          "loss": 1.4225394806999248e-05,
+          "price_loss": 1.4225394806999248e-05,
+          "butterfly_penalty": 0.0,
+          "calendar_penalty": 0.0
+        },
+        "median_relative_price_error": 0.0017317081801593304,
+        "p95_relative_price_error": 0.00926443375647068,
+        "arbitrage": {
+          "butterfly_min_g": 0.6299325823783875,
+          "butterfly_violations": 0,
+          "calendar_violations": 0
+        }
+      },
+      "lambda_b=1,lambda_t=1": {
+        "fit_seconds": 0.23264633400140156,
+        "final_loss": {
+          "loss": 1.4225394806999248e-05,
+          "price_loss": 1.4225394806999248e-05,
+          "butterfly_penalty": 0.0,
+          "calendar_penalty": 0.0
+        },
+        "median_relative_price_error": 0.0017317081801593304,
+        "p95_relative_price_error": 0.00926443375647068,
+        "arbitrage": {
+          "butterfly_min_g": 0.6299325823783875,
+          "butterfly_violations": 0,
+          "calendar_violations": 0
+        }
+      }
+    },
+    "dropout_30_percent": {
+      "train_rows": 156,
+      "heldout_rows": 68,
+      "neural_median_relative_error": 0.0020388979464769363,
+      "neural_p95_relative_error": 0.009408580139279366,
+      "svi_median_relative_error": 0.0006681375998242732,
+      "svi_p95_relative_error": 0.0018226143479751736
+    }
+  },
+  "fit_seconds": 2.4760434580002766,
+  "history": {
+    "torch_svi_groups": 12,
+    "neural_ablations": 4
+  }
+}
