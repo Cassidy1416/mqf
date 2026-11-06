@@ -1,0 +1,243 @@
+{
+  "q2": {
+    "snapshot_window": {
+      "start": "2020-01-01",
+      "end": "2025-12-31"
+    },
+    "raw_format": "CSV serialization of the AKShare response table before local cleaning.",
+    "verification": {
+      "market_trading_dates": 1455,
+      "market_calendars_match": true,
+      "shibor_complete_on_market_dates": true,
+      "daily_price_columns_positive": true,
+      "clean_dates_unique": true
+    },
+    "datasets": {
+      "if0": {
+        "label": "CSI 300 continuous main futures",
+        "provider": "Sina Finance",
+        "access": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "futures_main_sina",
+          "parameters": {
+            "symbol": "IF0",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+        },
+        "retrieval_date": "2026-11-06",
+        "raw": {
+          "path": "data/raw/q2/if0.csv",
+          "sha256": "475930a9a6437287debc3b6246bcb2f7c7913d51cd85e56f89c67c4d3136739a",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "日期": "date (YYYY-MM-DD)",
+            "开盘价": "float64",
+            "最高价": "float64",
+            "最低价": "float64",
+            "收盘价": "float64",
+            "成交量": "int64",
+            "持仓量": "int64",
+            "动态结算价": "float64"
+          }
+        },
+        "clean_value_units": "index points",
+        "cleaning_notes": [
+          "Retained daily OHLC and use close as the input price for log-return calibration.",
+          "Retained the source continuous main-contract series. The source has no per-row contract ID. No roll adjustment applied. The raw dynamic settlement field has 1455 nonpositive values in the window and is excluded from the clean snapshot."
+        ],
+        "clean": {
+          "path": "data/clean/q2/if0.csv",
+          "sha256": "52639746f7fc927939306195a39c736bafd73c09a24afd649311e75c8db551b6",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "date": "date (YYYY-MM-DD)",
+            "open": "float64",
+            "high": "float64",
+            "low": "float64",
+            "close": "float64",
+            "volume": "int64",
+            "open_interest": "int64"
+          }
+        }
+      },
+      "cu0": {
+        "label": "Copper continuous main futures",
+        "provider": "Sina Finance",
+        "access": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "futures_main_sina",
+          "parameters": {
+            "symbol": "CU0",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+        },
+        "retrieval_date": "2026-11-06",
+        "raw": {
+          "path": "data/raw/q2/cu0.csv",
+          "sha256": "30f7579c2b5647a5b91549969733471f4ca38c9d094823271dd0fc89d8734517",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "日期": "date (YYYY-MM-DD)",
+            "开盘价": "float64",
+            "最高价": "float64",
+            "最低价": "float64",
+            "收盘价": "float64",
+            "成交量": "int64",
+            "持仓量": "int64",
+            "动态结算价": "float64"
+          }
+        },
+        "clean_value_units": "CNY per metric tonne",
+        "cleaning_notes": [
+          "Retained daily OHLC and use close as the input price for log-return calibration.",
+          "Retained the source continuous main-contract series. The source has no per-row contract ID. No roll adjustment applied. The raw dynamic settlement field has 3 nonpositive values in the window and is excluded from the clean snapshot."
+        ],
+        "clean": {
+          "path": "data/clean/q2/cu0.csv",
+          "sha256": "eb36e12102fe8d2a9a94e61dd2118a4af31aee720994d28b352d3c851da64909",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "date": "date (YYYY-MM-DD)",
+            "open": "float64",
+            "high": "float64",
+            "low": "float64",
+            "close": "float64",
+            "volume": "int64",
+            "open_interest": "int64"
+          }
+        }
+      },
+      "csi300": {
+        "label": "CSI 300 cash index",
+        "provider": "Eastmoney",
+        "access": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "index_zh_a_hist",
+          "parameters": {
+            "symbol": "000300",
+            "period": "daily",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/index/index.html"
+        },
+        "retrieval_date": "2026-11-06",
+        "raw": {
+          "path": "data/raw/q2/csi300.csv",
+          "sha256": "b3b89fc91e6334d5364528edfec5310ea0eb134a16508650ee0b8bcf3dc74c6d",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "日期": "date (YYYY-MM-DD)",
+            "开盘": "float64",
+            "收盘": "float64",
+            "最高": "float64",
+            "最低": "float64",
+            "成交量": "int64",
+            "成交额": "float64",
+            "振幅": "float64",
+            "涨跌幅": "float64",
+            "涨跌额": "float64",
+            "换手率": "float64"
+          }
+        },
+        "clean_value_units": "index points",
+        "cleaning_notes": [
+          "Retained daily OHLC and use close as the input price for log-return calibration."
+        ],
+        "clean": {
+          "path": "data/clean/q2/csi300.csv",
+          "sha256": "3a34ca74d3293367ab9dc36f88c146b671b71aeaca882fb2677d0cd7578c554d",
+          "rows": 1455,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "date": "date (YYYY-MM-DD)",
+            "open": "float64",
+            "high": "float64",
+            "low": "float64",
+            "close": "float64",
+            "volume": "int64",
+            "turnover": "float64"
+          }
+        }
+      },
+      "shibor": {
+        "label": "SHIBOR daily fixings",
+        "provider": "Jin10 Data Center",
+        "access": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "macro_china_shibor_all",
+          "parameters": {},
+          "documentation": "https://akshare.akfamily.xyz/data/macro/macro_china.html"
+        },
+        "retrieval_date": "2026-11-06",
+        "raw": {
+          "path": "data/raw/q2/shibor.csv",
+          "sha256": "aef53e0128fa09580fd1f339febad44eac0652a26c89cf48926399d9beb7ad76",
+          "rows": 2400,
+          "first_date": "2015-05-08",
+          "last_date": "2026-11-06",
+          "schema": {
+            "日期": "date (YYYY-MM-DD)",
+            "O/N-定价": "float64",
+            "O/N-涨跌幅": "float64",
+            "1W-定价": "float64",
+            "1W-涨跌幅": "float64",
+            "2W-定价": "float64",
+            "2W-涨跌幅": "float64",
+            "1M-定价": "float64",
+            "1M-涨跌幅": "float64",
+            "3M-定价": "float64",
+            "3M-涨跌幅": "float64",
+            "6M-定价": "float64",
+            "6M-涨跌幅": "float64",
+            "9M-定价": "float64",
+            "9M-涨跌幅": "float64",
+            "1Y-定价": "float64",
+            "1Y-涨跌幅": "float64"
+          }
+        },
+        "clean_value_units": "decimal annual rate",
+        "cleaning_notes": [
+          "Retained the eight quoted fixing levels and divided the source percentages by 100. Dropped the change columns. No tenor interpolation or compounding conversion applied."
+        ],
+        "clean": {
+          "path": "data/clean/q2/shibor.csv",
+          "sha256": "a4716b4c9c3f39d9483bd713ebd67aee956d577000911dae7adee4b49bfb5564",
+          "rows": 1493,
+          "first_date": "2020-01-02",
+          "last_date": "2025-12-31",
+          "schema": {
+            "date": "date (YYYY-MM-DD)",
+            "rate_on": "float64",
+            "rate_1w": "float64",
+            "rate_2w": "float64",
+            "rate_1m": "float64",
+            "rate_3m": "float64",
+            "rate_6m": "float64",
+            "rate_9m": "float64",
+            "rate_1y": "float64"
+          }
+        }
+      }
+    }
+  }
+}
