@@ -1,0 +1,356 @@
+{
+  "params": {
+    "question": "q2",
+    "approach": "approach1",
+    "dataset": "cu0",
+    "seed": 42,
+    "child_seeds": {
+      "testing_streams": {
+        "headline": 2382058087,
+        "estimators": 1579367860,
+        "greeks": 1548757065,
+        "analysis": 3753179957
+      },
+      "training": 2684470948,
+      "validation": 4091952314,
+      "testing": 233227757
+    },
+    "seed_usage": {
+      "training": "GBM calibration from log returns (deterministic, stream reserved)",
+      "validation": "European call parity check against Black-Scholes",
+      "testing": "four sub-streams: headline prices, estimator comparison, greeks, RMSE study"
+    },
+    "valuation_date": "2025-12-31",
+    "maturity_years": 1.0,
+    "paths": 100000,
+    "steps_per_year": 252,
+    "steps": 252,
+    "barrier_multiple": 1.5,
+    "barrier": 147360.0,
+    "calibration": {
+      "window": {
+        "start": "2020-01-02",
+        "end": "2025-12-31"
+      },
+      "return_observations": 1454,
+      "spot": 98240.0,
+      "vol": 0.17869867948910426,
+      "log_drift": 0.11974510880222689,
+      "level_drift": 0.1357117178278017
+    },
+    "discount": {
+      "fixing_date": "2025-12-31",
+      "simple_quote": 0.0165,
+      "continuous_rate": 0.016365354086264272
+    }
+  },
+  "metrics": {
+    "european": {
+      "price": 7815.181662092828,
+      "standard_error": 37.76044238078832,
+      "black_scholes": 7763.819390252429,
+      "parity_z": 0.5448674626848871,
+      "within_parity_band": true,
+      "validation": {
+        "price": 7784.361236234982,
+        "standard_error": 37.7006288489522,
+        "black_scholes": 7763.819390252429,
+        "parity_z": 0.5448674626848871
+      }
+    },
+    "asian": {
+      "price": 4436.752918206835,
+      "standard_error": 21.0190195969914
+    },
+    "up_and_out": {
+      "price": 6729.133211705527,
+      "standard_error": 31.90827863129517
+    },
+    "digital": {
+      "price": 0.4947270044269552,
+      "standard_error": 0.001555455311191078
+    },
+    "estimators": {
+      "plain": {
+        "european": {
+          "price": 7742.419338978705,
+          "standard_error": 37.70799188906488
+        },
+        "asian": {
+          "price": 4435.903494674713,
+          "standard_error": 21.036875085143667
+        },
+        "up_and_out": {
+          "price": 6664.095431559007,
+          "standard_error": 31.74429285172288
+        },
+        "digital": {
+          "price": 0.4929955730447614,
+          "standard_error": 0.0015554773220855318
+        }
+      },
+      "antithetic": {
+        "european": {
+          "price": 7759.717365632463,
+          "standard_error": 28.394200670215675
+        },
+        "asian": {
+          "price": 4402.375613368734,
+          "standard_error": 15.440985437692872
+        },
+        "up_and_out": {
+          "price": 6730.020992979832,
+          "standard_error": 23.733596837833446
+        },
+        "digital": {
+          "price": 0.4927299557304476,
+          "standard_error": 9.115329472740181e-05
+        }
+      },
+      "geometric_cv_asian": {
+        "price": 4419.86133355344,
+        "standard_error": 0.5014512160489394,
+        "beta": 1.0299265863731297,
+        "control_price": 4273.932758840341,
+        "steps": 252
+      },
+      "path_counts_equal": 100000
+    },
+    "greeks": {
+      "paths": 50000,
+      "steps": 252,
+      "pathwise": {
+        "european": {
+          "delta": {
+            "value": 0.5701507344814051,
+            "standard_error": 0.002583629622164604
+          },
+          "vega": {
+            "value": 38260.294130688104,
+            "standard_error": 314.7965790432407
+          }
+        },
+        "asian": {
+          "delta": {
+            "value": 0.5421356340030719,
+            "standard_error": 0.0024088350153467514
+          },
+          "vega": {
+            "value": 22273.29968427562,
+            "standard_error": 171.11827296617915
+          }
+        }
+      },
+      "finite_difference": {
+        "delta": {
+          "10.000%": {
+            "european": {
+              "value": 0.5626920915608445,
+              "standard_error": 0.002286200443657435
+            },
+            "asian": {
+              "value": 0.5320078123870716,
+              "standard_error": 0.0018506163822285693
+            }
+          },
+          "1.000%": {
+            "european": {
+              "value": 0.5699018832512261,
+              "standard_error": 0.0025574208133287628
+            },
+            "asian": {
+              "value": 0.5425033884595503,
+              "standard_error": 0.0023564885478642634
+            }
+          },
+          "0.100%": {
+            "european": {
+              "value": 0.5700576063914722,
+              "standard_error": 0.0025811908654512603
+            },
+            "asian": {
+              "value": 0.5421673919101939,
+              "standard_error": 0.0024036917499093992
+            }
+          }
+        },
+        "vega": {
+          "0.005": {
+            "european": {
+              "value": 38261.611018822354,
+              "standard_error": 314.78704489407204
+            },
+            "asian": {
+              "value": 22272.904083108253,
+              "standard_error": 171.11764666410892
+            }
+          },
+          "0.002": {
+            "european": {
+              "value": 38260.95693561589,
+              "standard_error": 314.79192521660053
+            },
+            "asian": {
+              "value": 22273.15609230035,
+              "standard_error": 171.1180122243435
+            }
+          },
+          "0.001": {
+            "european": {
+              "value": 38260.210970412845,
+              "standard_error": 314.79521956255775
+            },
+            "asian": {
+              "value": 22273.430474651414,
+              "standard_error": 171.1175172935943
+            }
+          }
+        }
+      },
+      "analytic_european": {
+        "delta": 0.5717887638029204,
+        "vega": 38555.821010077256
+      }
+    },
+    "rmse": {
+      "path_counts": [
+        100,
+        300,
+        1000,
+        3000,
+        10000,
+        30000
+      ],
+      "replications": [
+        4096,
+        1024,
+        512,
+        256,
+        64,
+        32
+      ],
+      "european_truth": 7763.819390252429,
+      "asian_truth": 4420.069868059745,
+      "series": {
+        "plain_european": {
+          "rmse": [
+            1167.9975527548854,
+            696.271148856017,
+            374.2587901048741,
+            224.03868681157797,
+            129.77374427191495,
+            63.609950159126704
+          ]
+        },
+        "antithetic_european": {
+          "rmse": [
+            896.8905449895376,
+            530.9901537499707,
+            282.9262884358325,
+            164.4568578591367,
+            100.55324731593505,
+            60.39943953999982
+          ]
+        },
+        "plain_asian": {
+          "rmse": [
+            646.3090295569888,
+            385.95844925799236,
+            212.07249736370744,
+            122.66944596497454,
+            70.01196000704398,
+            42.038085528931184
+          ]
+        },
+        "antithetic_asian": {
+          "rmse": [
+            492.3959269408203,
+            287.3318303885667,
+            155.90136564578475,
+            88.1092193292691,
+            50.46778967268313,
+            28.89422345523917
+          ]
+        },
+        "cv_asian": {
+          "rmse": [
+            17.022477740479925,
+            8.944102395703501,
+            4.9498996910140916,
+            2.8803836826227647,
+            1.7554541718221308,
+            1.059600063580051
+          ]
+        }
+      },
+      "slopes": {
+        "plain_european": {
+          "slope": -0.5007847348095389,
+          "factor_at_1000_paths": 12028.909757101923
+        },
+        "antithetic_european": {
+          "slope": -0.47396984343029325,
+          "factor_at_1000_paths": 7759.0778451153865
+        },
+        "plain_asian": {
+          "slope": -0.4816677653668891,
+          "factor_at_1000_paths": 5934.8950444422435
+        },
+        "antithetic_asian": {
+          "slope": -0.49743135621909523,
+          "factor_at_1000_paths": 4856.917586779697
+        },
+        "cv_asian": {
+          "slope": -0.4809671069074255,
+          "factor_at_1000_paths": 144.1000374648842
+        }
+      }
+    },
+    "performance": {
+      "paths": 1024,
+      "steps": 252,
+      "scalar_seconds": 0.04032452799341021,
+      "vectorized_seconds": 0.00255074999993667,
+      "speedup": 15.808890716225182
+    }
+  },
+  "fit_seconds": 25.221019958000397,
+  "history": {
+    "paths": [
+      10000,
+      20000,
+      30000,
+      40000,
+      50000,
+      60000,
+      70000,
+      80000,
+      90000,
+      100000
+    ],
+    "running_price": [
+      7658.5491025433,
+      7683.329443429578,
+      7744.702799830974,
+      7745.850834271452,
+      7720.261806552521,
+      7731.008212323035,
+      7722.776778244977,
+      7772.626781233554,
+      7782.247102781297,
+      7784.3612362349495
+    ],
+    "running_standard_error": [
+      117.43627643695046,
+      83.90608810976146,
+      68.86107841631299,
+      59.64151025525665,
+      53.123345327230396,
+      48.525878497851394,
+      44.86331607927634,
+      42.12968000541761,
+      39.7496304484606,
+      37.70062884895248
+    ]
+  }
+}

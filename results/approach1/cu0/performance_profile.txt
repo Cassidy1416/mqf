@@ -1,0 +1,14 @@
+         1290248 function calls in 0.154 seconds
+
+   Ordered by: cumulative time
+   List reduced from 13 to 6 due to restriction <6>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.041    0.041    0.154    0.154 /Users/cassidyshi/Documents/ChatGPT/MQF/code/approach1_q2.py:544(scalar_run)
+   258048    0.066    0.000    0.101    0.000 /opt/anaconda3/lib/python3.13/random.py:555(gauss)
+   258048    0.012    0.000    0.012    0.000 {built-in method math.exp}
+   258048    0.010    0.000    0.010    0.000 {method 'random' of '_random.Random' objects}
+   129024    0.006    0.000    0.006    0.000 {built-in method math.cos}
+   129024    0.006    0.000    0.006    0.000 {built-in method math.sin}
+
+

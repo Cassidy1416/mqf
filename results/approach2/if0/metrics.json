@@ -1,0 +1,300 @@
+{
+  "params": {
+    "question": "q2",
+    "approach": "approach2",
+    "dataset": "if0",
+    "seed": 42,
+    "streams": {
+      "training": 2684470948,
+      "validation": 4091952314,
+      "testing": 233227757
+    },
+    "model_seed": 2684470948,
+    "shuffle_seed": 2684470949,
+    "torch_threads": 2,
+    "torch_version": "2.15.0",
+    "valuation_date": "2025-12-31",
+    "calibration_start": "2020-01-02",
+    "calibration_end": "2025-12-31",
+    "calibration": {
+      "return_observations": 1454,
+      "vol": 0.20310128502113958,
+      "log_drift": 0.017401102750768446,
+      "level_drift": 0.038026168739387536
+    },
+    "maturity_years": 1.0,
+    "steps": 252,
+    "spot0": 4599.8,
+    "strike": 4599.8,
+    "barrier": 6899.700000000001,
+    "discount_rate": 0.016365354086264272,
+    "shibor_fixing_date": "2025-12-31",
+    "pricing_paths": 100000,
+    "train_paths": 131072,
+    "validation_paths": 8192,
+    "test_paths": 32768,
+    "epochs": 5,
+    "batch_size": 4096,
+    "learning_rate": 0.003,
+    "hidden_width": 16,
+    "cvar_alpha": 0.95,
+    "rebalance_days": [
+      1,
+      5,
+      21
+    ],
+    "cost_bps": [
+      0,
+      10,
+      50
+    ],
+    "hedged_payoff": "at-the-money European call",
+    "pnl_convention": "Exam terminal P&L, with financing on hedge gains and costs on scheduled trades including entry",
+    "residual_nondeterminism": "CPU runs use seeded generators and two threads. Floating-point results may vary across platforms."
+  },
+  "metrics": {
+    "pricing": {
+      "european": {
+        "price": 406.7907457601747,
+        "standard_error": 2.024238410798855,
+        "black_scholes": 407.56830093604776,
+        "parity_z": -0.38412233051453254
+      },
+      "asian": {
+        "price": 232.33307711283945,
+        "standard_error": 1.1187304532819684
+      },
+      "up_and_out": {
+        "price": 311.8244959460012,
+        "standard_error": 1.5404242098087448
+      },
+      "digital": {
+        "price": 0.4811116576487949,
+        "standard_error": 0.0015551082375514392
+      }
+    },
+    "hedging": {
+      "h1_c0": {
+        "rebalance_days": 1,
+        "cost_bps": 0,
+        "deep": {
+          "cvar95": 694.2088833100213,
+          "mean_pnl": -370.38035617461014,
+          "pnl_variance": 27657.063002065952
+        },
+        "bs": {
+          "cvar95": 427.17634878132753,
+          "mean_pnl": -370.23403249079854,
+          "pnl_variance": 936.6011220556966
+        }
+      },
+      "h1_c10": {
+        "rebalance_days": 1,
+        "cost_bps": 10,
+        "deep": {
+          "cvar95": 709.4163905655446,
+          "mean_pnl": -383.9074362597332,
+          "pnl_variance": 27785.855891185893
+        },
+        "bs": {
+          "cvar95": 458.98218987957534,
+          "mean_pnl": -395.9097527444507,
+          "pnl_variance": 1045.1374926155643
+        }
+      },
+      "h1_c50": {
+        "rebalance_days": 1,
+        "cost_bps": 50,
+        "deep": {
+          "cvar95": 768.186893188501,
+          "mean_pnl": -435.901676686236,
+          "pnl_variance": 28476.320075108644
+        },
+        "bs": {
+          "cvar95": 611.7426429448657,
+          "mean_pnl": -498.6126248743642,
+          "pnl_variance": 2974.1984298756274
+        }
+      },
+      "h5_c0": {
+        "rebalance_days": 5,
+        "cost_bps": 0,
+        "deep": {
+          "cvar95": 704.6653217317005,
+          "mean_pnl": -370.4745834187951,
+          "pnl_variance": 28795.420749193494
+        },
+        "bs": {
+          "cvar95": 478.1533713449948,
+          "mean_pnl": -370.39448245041973,
+          "pnl_variance": 2464.375214157509
+        }
+      },
+      "h5_c10": {
+        "rebalance_days": 5,
+        "cost_bps": 10,
+        "deep": {
+          "cvar95": 713.7422547612015,
+          "mean_pnl": -378.0785757053956,
+          "pnl_variance": 28963.199256121843
+        },
+        "bs": {
+          "cvar95": 495.1261624697938,
+          "mean_pnl": -383.39552493010353,
+          "pnl_variance": 2525.143400296944
+        }
+      },
+      "h5_c50": {
+        "rebalance_days": 5,
+        "cost_bps": 50,
+        "deep": {
+          "cvar95": 746.1052902602801,
+          "mean_pnl": -407.62472195295595,
+          "pnl_variance": 29201.139469243506
+        },
+        "bs": {
+          "cvar95": 567.1336641694452,
+          "mean_pnl": -435.39969081804225,
+          "pnl_variance": 3070.458138315906
+        }
+      },
+      "h21_c0": {
+        "rebalance_days": 21,
+        "cost_bps": 0,
+        "deep": {
+          "cvar95": 743.8830216795471,
+          "mean_pnl": -370.19471273147957,
+          "pnl_variance": 33248.771365165456
+        },
+        "bs": {
+          "cvar95": 584.739684375658,
+          "mean_pnl": -369.5036623039023,
+          "pnl_variance": 8568.723518667355
+        }
+      },
+      "h21_c10": {
+        "rebalance_days": 21,
+        "cost_bps": 10,
+        "deep": {
+          "cvar95": 749.5646674609407,
+          "mean_pnl": -374.99182846600024,
+          "pnl_variance": 33348.01423841953
+        },
+        "bs": {
+          "cvar95": 594.1951495565479,
+          "mean_pnl": -376.88747174789245,
+          "pnl_variance": 8656.283668798465
+        }
+      },
+      "h21_c50": {
+        "rebalance_days": 21,
+        "cost_bps": 50,
+        "deep": {
+          "cvar95": 768.6551858291231,
+          "mean_pnl": -394.0499873392846,
+          "pnl_variance": 33352.025932480996
+        },
+        "bs": {
+          "cvar95": 632.5376056454252,
+          "mean_pnl": -406.4227059946839,
+          "pnl_variance": 9057.432642219812
+        }
+      }
+    }
+  },
+  "fit_seconds": 39.46975300001213,
+  "history": {
+    "hedging": {
+      "h1_c0": {
+        "validation_cvar_per_s0": [
+          0.22015392780303955,
+          0.2082449048757553,
+          0.19119767844676971,
+          0.17151707410812378,
+          0.1513357311487198
+        ],
+        "best_epoch": 5
+      },
+      "h1_c10": {
+        "validation_cvar_per_s0": [
+          0.22117041051387787,
+          0.20969724655151367,
+          0.1932898312807083,
+          0.17430192232131958,
+          0.15464599430561066
+        ],
+        "best_epoch": 5
+      },
+      "h1_c50": {
+        "validation_cvar_per_s0": [
+          0.22512830793857574,
+          0.21545208990573883,
+          0.2015049159526825,
+          0.18502439558506012,
+          0.167289137840271
+        ],
+        "best_epoch": 5
+      },
+      "h5_c0": {
+        "validation_cvar_per_s0": [
+          0.22040218114852905,
+          0.20880861580371857,
+          0.1922401785850525,
+          0.1730646938085556,
+          0.15345101058483124
+        ],
+        "best_epoch": 5
+      },
+      "h5_c10": {
+        "validation_cvar_per_s0": [
+          0.22115042805671692,
+          0.2097962647676468,
+          0.19359315931797028,
+          0.1747392863035202,
+          0.1553836315870285
+        ],
+        "best_epoch": 5
+      },
+      "h5_c50": {
+        "validation_cvar_per_s0": [
+          0.22420546412467957,
+          0.21363429725170135,
+          0.19861668348312378,
+          0.1808699369430542,
+          0.1623772382736206
+        ],
+        "best_epoch": 5
+      },
+      "h21_c0": {
+        "validation_cvar_per_s0": [
+          0.22118093073368073,
+          0.21070341765880585,
+          0.1959124505519867,
+          0.1788957267999649,
+          0.16147877275943756
+        ],
+        "best_epoch": 5
+      },
+      "h21_c10": {
+        "validation_cvar_per_s0": [
+          0.2218717634677887,
+          0.2114979773759842,
+          0.1969359666109085,
+          0.1800832748413086,
+          0.16270025074481964
+        ],
+        "best_epoch": 5
+      },
+      "h21_c50": {
+        "validation_cvar_per_s0": [
+          0.2245146930217743,
+          0.21451547741889954,
+          0.20045067369937897,
+          0.18395911157131195,
+          0.16681872308254242
+        ],
+        "best_epoch": 5
+      }
+    }
+  }
+}
