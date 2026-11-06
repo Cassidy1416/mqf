@@ -1,0 +1,19 @@
+[project]
+name = "mqf"
+version = "0.1.0"
+description = "MQF Advanced Programming project: Monte Carlo stress hedges, macro forecasting, and graph analytics"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "akshare==1.20.31",
+    "networkx",
+    "numpy",
+    "pandas",
+    "plotly",
+    "rich",
+    "scikit-learn",
+    "scipy",
+    "torch",
+]
+
+[tool.uv]
+package = false
