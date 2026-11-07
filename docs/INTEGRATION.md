@@ -80,3 +80,14 @@ The full Q1 and Q4 Git histories are preserved as merge ancestors of this reposi
 - Root `SESSION.md` includes the actual sanitized OpenCode integration transcripts.
 - Original question-session gaps and Codex orchestration history are not reconstructed by those exports.
 - Scientific completeness (all approaches executed and verified by the group) also remains for group review.
+
+## Integration validation - 2026-11-07
+
+All nine declared clean artifacts passed snapshot verification.
+The commands `python3 run.py q1 --offline`, `python3 run.py q2 --offline` and `python3 run.py q4 --offline` completed in an isolated copy using the original locked environments.
+All six approaches and their comparison scripts completed successfully and produced eight metrics files with the required schema.
+The final launcher also completed `python3 run.py all --stage compare --offline` in that copy and generated the combined index.
+Q2 numerical metrics matched the original saved results, excluding timing measurements.
+Additional launcher checks covered corrupted-data rejection, isolation between questions, stage-specific dry runs, negative-seed rejection, syntax and local report/index links.
+All imported original files were checked byte for byte against the source commits, and all three source commits remain ancestors of this branch.
+This verifies the integration and execution; the group still owns mathematical review and the previously documented completeness gaps.
