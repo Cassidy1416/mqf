@@ -6,11 +6,22 @@ import networkx as nx
 import numpy as np
 from common import validate_graph, apply_trade_distance, undirected_graph, validate_undirected_consistency
 from approach1_network_analytics import migration, graph_statistics
-from approach2_node_embeddings import split_links, build_training_graph, validate_splits, select_learned_model
+from approach2_node_embeddings import split_links, build_training_graph, validate_splits, select_learned_model, bilinear_scores
 from approach2_future_links import transition_sample
 
 
 class GraphContracts(unittest.TestCase):
+    def test_bilinear_scores_match_direct_sum_and_reject_nonfinite_operands(self):
+        vectors = np.array([[1., 2.], [3., -1.]])
+        weights = np.array([[.2, -.1], [.3, .4]])
+        expected = sum(vectors[0, i] * weights[i, j] * vectors[1, j] for i in range(2) for j in range(2))
+        with np.errstate(all="raise"):
+            value = bilinear_scores(vectors, [0, 1], weights, [(0, 1)])[0]
+        self.assertAlmostEqual(value, 1/(1+np.exp(-expected)))
+        vectors[0, 0] = np.nan
+        with self.assertRaisesRegex(ValueError, "nonfinite"):
+            bilinear_scores(vectors, [0, 1], weights, [(0, 1)])
+
     def test_projection_preserves_union_and_sums_reciprocal_weights(self):
         graph = nx.DiGraph()
         graph.add_weighted_edges_from([(0, 1, 10), (1, 0, 20), (1, 2, 5)])

@@ -98,7 +98,7 @@ def main(argv=None):
         data=json.loads(redact(args.source.read_text()))
         target_json.write_text(json.dumps(data, indent=2, ensure_ascii=False)+'\n')
     text=render_opencode(data) if args.format=='opencode' else render_codex(data,args.target.stem)
-    args.target.write_text('\n'.join(line.rstrip() for line in text.splitlines())+'\n')
+    args.target.write_text('\n'.join(line.rstrip() for line in text.splitlines()).rstrip()+'\n')
     print(f"Exported {args.target.resolve().relative_to(ROOT)}; public JSON SHA-256 {hashlib.sha256(target_json.read_bytes()).hexdigest()}")
 
 

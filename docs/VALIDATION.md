@@ -10,8 +10,8 @@ The long Q2B run completed successfully in the working repository and was not re
 | Root regression tests | 5 pass |
 | Q1 regression tests | 5 pass |
 | Q2 regression tests | 33 pass |
-| Q4 regression tests | 6 pass |
-| Total regression checks | 49 pass |
+| Q4 regression tests | 7 pass |
+| Total regression checks | 50 pass |
 | All native comparisons and root aggregation | Pass; Q1 common holdout and Q4 static/future separated |
 | Report artifact links | All generated report links resolve locally |
 | Numeric result scan | No nonfinite floats in saved metrics |
@@ -25,3 +25,11 @@ The macOS sandbox causes uv's system-configuration lookup to panic, so uv comman
 The combined report and audit distinguish implementation completion from benchmark success and submission review.
 Q1 expanded-data repricing and calendar consistency and Q4 learned predictive targets are not claimed to pass when they do not.
 The group still needs to verify its report, resolve documented compliance interpretations and review the final commit before a `submission` tag is appropriate.
+
+A clean tracked archive installed all three fresh pinned environments offline from the in-repository uv cache.
+Its snapshot verification, initial 49 regression checks, both Q1 approaches, Q2A for both contracts and all Q4 approaches reproduced successfully.
+The later Q4 finite-contraction regression brings the final working-tree suite to 50 checks.
+The clean-archive logs exposed floating-point status warnings from small matrix products in the pinned macOS NumPy/BLAS path.
+Direct-sum diagnostics confirmed finite, modest operands and agreement with the matrix product; Q4 scoring and alignment now use explicit finite checks and direct float64 contractions without hiding numerical errors.
+Both Q4 learned tasks were rerun after that numerical change.
+SciPy SLSQP can still report that a trial iterate was clipped to bounds; final solver status and arbitrage checks, rather than the trial step, determine the reported calibration outcome.

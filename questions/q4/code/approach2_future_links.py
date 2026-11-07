@@ -16,7 +16,7 @@ from rich.console import Console
 from rich.table import Table
 
 from common import ROOT, directed_graph, undirected_graph, load_nodes, load_edges, years_in, write_metrics, save_plot, validate_graph
-from approach2_node_embeddings import walk_pairs, train_skipgram, evaluate_scores, heuristic_scores, select_learned_model, graph_fingerprint
+from approach2_node_embeddings import walk_pairs, train_skipgram, evaluate_scores, heuristic_scores, select_learned_model, graph_fingerprint, bilinear_scores
 
 
 def transition_sample(graph, following, feature_year, seed):
@@ -41,7 +41,9 @@ def embed(graph, args, p, q, dimension, reference=None):
     # Rotation alignment uses only node correspondence and current/prior graph embeddings.
     if reference is not None:
         rotation, _ = orthogonal_procrustes(vectors, reference)
-        vectors = vectors @ rotation
+        vectors = np.einsum("ij,jk->ik", vectors.astype(np.float64), rotation.astype(np.float64), optimize=False).astype(vectors.dtype)
+    if not np.isfinite(vectors).all():
+        raise ValueError("Nonfinite aligned embeddings")
     return vectors
 
 
@@ -68,9 +70,8 @@ def fit_matrix(samples, embeddings, node_order):
 
 
 def score(matrix, vectors, nodes, sample):
-    index = {n: i for i, n in enumerate(nodes)}
     pairs = sample["positive"] + sample["negative"]
-    values = [float(1 / (1 + np.exp(-np.clip(vectors[index[a]] @ matrix @ vectors[index[b]], -50, 50)))) for a, b in pairs]
+    values = bilinear_scores(vectors, nodes, matrix, pairs)
     return evaluate_scores(sample["positive"], sample["negative"], values)
 
 

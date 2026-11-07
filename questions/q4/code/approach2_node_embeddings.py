@@ -4,8 +4,6 @@ import os
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", str(os.cpu_count() or 1))
 import argparse
 import hashlib
-import math
-import platform
 import sys
 import time
 from pathlib import Path
@@ -178,7 +176,16 @@ def fit_bilinear(embeddings: np.ndarray, node_order: list[int], links: dict[str,
 
 def bilinear_scores(embeddings: np.ndarray, node_order: list[int], matrix: np.ndarray, pairs: list[tuple[int, int]]) -> list[float]:
     index = {node: position for position, node in enumerate(node_order)}
-    return [float(1.0 / (1.0 + math.exp(-np.clip(embeddings[index[left]] @ matrix @ embeddings[index[right]], -50, 50)))) for left, right in pairs]
+    vectors, weights = np.asarray(embeddings, dtype=np.float64), np.asarray(matrix, dtype=np.float64)
+    if not np.isfinite(vectors).all() or not np.isfinite(weights).all():
+        raise ValueError("Bilinear scoring received nonfinite embeddings or weights")
+    left = vectors[[index[a] for a, _ in pairs]]
+    right = vectors[[index[b] for _, b in pairs]]
+    # A direct float64 contraction avoids spurious BLAS FP-status warnings on macOS.
+    logits = np.einsum("bi,ij,bj->b", left, weights, right, optimize=False)
+    if not np.isfinite(logits).all():
+        raise ValueError("Bilinear score overflowed")
+    return (1 / (1 + np.exp(-np.clip(logits, -50, 50)))).tolist()
 
 
 def select_learned_model(records: list[dict]) -> dict | None:

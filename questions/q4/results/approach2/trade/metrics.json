@@ -1118,7 +1118,7 @@
     },
     "task": "Held-out trade-edge recovery on edges excluded from the training graph; walks, embeddings, heuristics, and bilinear fitting use the training graph only."
   },
-  "fit_seconds": 8.84708862498519,
+  "fit_seconds": 7.265764333016705,
   "history": {
     "dimensions": [
       8,

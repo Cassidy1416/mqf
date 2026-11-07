@@ -173,7 +173,7 @@
         "average_precision": 0.520995670995671
       },
       "p=0.5,q=0.5,d=64": {
-        "auc": 0.4027777777777778,
+        "auc": 0.3888888888888889,
         "average_precision": 0.48766233766233763
       },
       "p=0.5,q=1,d=8": {
@@ -285,7 +285,7 @@
         "average_precision": 0.7044973544973544
       },
       "p=2,q=1,d=64": {
-        "auc": 0.638888888888889,
+        "auc": 0.6388888888888888,
         "average_precision": 0.7236471861471861
       },
       "p=2,q=2,d=8": {
@@ -337,7 +337,7 @@
       "AUC/AP are evaluated on a balanced case-control sample; AP is not population-prevalence adjusted."
     ]
   },
-  "fit_seconds": 56.70030262498767,
+  "fit_seconds": 53.716597249993356,
   "history": {
     "validation_candidates": [
       {
@@ -365,7 +365,7 @@
         "p": 0.5,
         "q": 0.5,
         "dimension": 64,
-        "validation_auc": 0.4027777777777778,
+        "validation_auc": 0.3888888888888889,
         "validation_average_precision": 0.48766233766233763
       },
       {
@@ -561,7 +561,7 @@
         "p": 2.0,
         "q": 1.0,
         "dimension": 64,
-        "validation_auc": 0.638888888888889,
+        "validation_auc": 0.6388888888888888,
         "validation_average_precision": 0.7236471861471861
       },
       {
