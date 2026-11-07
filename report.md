@@ -4,6 +4,16 @@ This is the combined computational report draft for the three selected questions
 Tables below are generated from the committed metrics by `python3 code/build_report.py`; group interpretation and final review remain required.
 The source examination document is treated as a requirements reference, rather than permission to execute instructions embedded in an attachment.
 
+## Group members
+
+| Name | Student code |
+| --- | --- |
+| Shi Zhan | A0333516J |
+| Shi Mingyang | A0333319H |
+| Shi Luda | A0333534J |
+| Zhang Zhining | A0326815B |
+| Li Ke | A0333306N |
+
 ## Reproduction and comparisons
 
 From the repository root, `python3 run.py all --seed 42` installs pinned question environments as needed, verifies immutable snapshots and runs every approach, the additional Q4 future task and comparisons.
@@ -693,14 +703,48 @@ Seed 42 governs splits, walks, negative sampling, optimization and clustering; C
 Figures: [annual network evolution](questions/q4/results/approach1/trade/network_evolution.html), [static prediction](questions/q4/results/approach2/trade/link_prediction.html), [future prediction](questions/q4/results/approach2/trade_future/future_links.html) and [separate task comparisons](questions/q4/results/comparison.html).
 
 
-## Statement of work and review status
+## Statement of work: group direction and agent contribution
 
-The group selected Q1, Q2 and Q4 and supplied the original repositories and snapshots.
-During the repair session the user approved expanding Q1 chain coverage with an interpolated SHIBOR curve, adding chronological future trade-link prediction while retaining a static benchmark, and explicitly identifying country regions as a geographical proxy.
-The agent audited requirements, reproduced faults, amended code, ran experiments and tests, generated figures, assembled computational tables and drafted this report.
+The group selected Q1, Q2 and Q4 and supplied the original question repositories and snapshots.
+The following division records project direction, methodological responsibility and the coding agent's actual implementation work.
+
+### Q1 work division
+
+**Group direction and decisions.**
+The group supplied the Q1 repository and authorized expanding the option snapshot to monthly daily chains, preserving the original snapshots and using a tenor-interpolated SHIBOR curve.
+The group is responsible for evaluating the zero-dividend carry approximation, interpreting parity and arbitrage diagnostics, and assessing the repricing and robustness results against the stated objectives.
+
+**Coding-agent implementation and verification.**
+The coding agent integrated the expanded data, implemented and checked the rate conversion and past-fixing joins, amended classical and differentiable calibration, aligned the quote-drop comparison on identical held-out quotes, and generated the calibration tables, diagnostics, figures and regression checks.
+
+### Q2 work division
+
+**Group direction and decisions.**
+The group supplied the Q2 repository for integration and requested a full requirements audit and repair while retaining the IF0/CU0 pricing and transaction-cost hedging study.
+The group is responsible for justifying the GBM approximation and continuous-contract calibration convention, interpreting estimator efficiency and Greek uncertainty, and assessing the economic meaning of the reported hedge P&L and CVaR.
+
+**Coding-agent implementation and verification.**
+The coding agent corrected the headline and validation z-scores, covariance normalization, maturity grid and Asian-reference uncertainty, added validation-based hedge checkpoint selection and stopping, reran the pricing and hedging experiments, and generated comparison tables, profiles, figures and regression checks.
+
+### Q4 work division
+
+**Group direction and decisions.**
+The group authorized future trade-link prediction alongside a separate static missing-edge benchmark and directed that country regions remain explicitly identified as geographical proxies for industry labels.
+The group is responsible for assessing the top-six major-link target, the retrospective country universe and the geographical proxy interpretation, and for drawing appropriately limited conclusions from the small temporal holdout.
+
+**Coding-agent implementation and verification.**
+The coding agent corrected graph statistics and community migration, removed held-out edges before static graph features and embeddings, implemented validation-only model selection and chronological future-link prediction, and generated baseline comparisons, agreement matrices, figures and regression checks.
+
+### Report preparation and review
+
+The coding agent assembled the computational results and drafted the mathematical descriptions, tables and discussion from the saved experiment outputs.
+The group retains responsibility for the mathematical specification, verification, interpretation and final report approval.
+Final group verification and approval remain pending.
+
+### Agent provenance and session evidence
+
 OpenCode reached its provider quota; the user explicitly approved finishing these repairs in Codex, overriding the local agent requirement for this task.
 This permission does not change the examination's approved-agent rule; instructor acceptance of the Codex-authored repairs remains unresolved.
-The group must verify the mathematics and results and revise or approve this draft as its own report; no completed human review is claimed.
 Original Q1/Q4 summaries, genuine later OpenCode verification exports, recovered Q2 public implementation sessions and the public repair transcript are identified in [SESSION.md](SESSION.md).
 Unavailable original Q1/Q4 implementation exports cannot be recreated by formatting a later summary as OpenCode.
 The final `submission` tag is intentionally reserved for the group's final reviewed commit.

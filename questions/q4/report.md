@@ -207,14 +207,27 @@ The region-proxy comparison does not fulfill a literal industry-ground-truth req
 Seed 42 governs splits, walks, negative sampling, optimization and clustering; CPU arithmetic can vary slightly by platform.
 Figures: [annual network evolution](results/approach1/trade/network_evolution.html), [static prediction](results/approach2/trade/link_prediction.html), [future prediction](results/approach2/trade_future/future_links.html) and [separate task comparisons](results/comparison.html).
 
-## Statement of work and review status
+## Statement of work: group direction and agent contribution
 
-The group selected Q1, Q2 and Q4 and supplied the original repositories and snapshots.
-During the repair session the user approved expanding Q1 chain coverage with an interpolated SHIBOR curve, adding chronological future trade-link prediction while retaining a static benchmark, and explicitly identifying country regions as a geographical proxy.
-The agent audited requirements, reproduced faults, amended code, ran experiments and tests, generated figures, assembled computational tables and drafted this report.
+### Q4 work division
+
+**Group direction and decisions.**
+The group authorized future trade-link prediction alongside a separate static missing-edge benchmark and directed that country regions remain explicitly identified as geographical proxies for industry labels.
+The group is responsible for assessing the top-six major-link target, the retrospective country universe and the geographical proxy interpretation, and for drawing appropriately limited conclusions from the small temporal holdout.
+
+**Coding-agent implementation and verification.**
+The coding agent corrected graph statistics and community migration, removed held-out edges before static graph features and embeddings, implemented validation-only model selection and chronological future-link prediction, and generated baseline comparisons, agreement matrices, figures and regression checks.
+
+### Report preparation and review
+
+The coding agent assembled the computational results and drafted the mathematical descriptions, tables and discussion from the saved experiment outputs.
+The group retains responsibility for the mathematical specification, verification, interpretation and final report approval.
+Final group verification and approval remain pending.
+
+### Agent provenance and session evidence
+
 OpenCode reached its provider quota; the user explicitly approved finishing these repairs in Codex, overriding the local agent requirement for this task.
 This permission does not change the examination's approved-agent rule; instructor acceptance of the Codex-authored repairs remains unresolved.
-The group must verify the mathematics and results and revise or approve this draft as its own report; no completed human review is claimed.
 Original Q1/Q4 summaries, genuine later OpenCode verification exports, recovered Q2 public implementation sessions and the public repair transcript are identified in [SESSION.md](SESSION.md).
 Unavailable original Q1/Q4 implementation exports cannot be recreated by formatting a later summary as OpenCode.
 The final `submission` tag is intentionally reserved for the group's final reviewed commit.

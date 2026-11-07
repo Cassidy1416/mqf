@@ -282,18 +282,57 @@ The fixed node universe is selected retrospectively from 2023, so the result is 
     return text
 
 
-OWNERSHIP = """## Statement of work and review status
+TEAM_MEMBERS = [
+    ("Shi Zhan", "A0333516J"),
+    ("Shi Mingyang", "A0333319H"),
+    ("Shi Luda", "A0333534J"),
+    ("Zhang Zhining", "A0326815B"),
+    ("Li Ke", "A0333306N"),
+]
 
-The group selected Q1, Q2 and Q4 and supplied the original repositories and snapshots.
-During the repair session the user approved expanding Q1 chain coverage with an interpolated SHIBOR curve, adding chronological future trade-link prediction while retaining a static benchmark, and explicitly identifying country regions as a geographical proxy.
-The agent audited requirements, reproduced faults, amended code, ran experiments and tests, generated figures, assembled computational tables and drafted this report.
+WORK_DIVISION = {
+    "q1": {
+        "group": "The group supplied the Q1 repository and authorized expanding the option snapshot to monthly daily chains, preserving the original snapshots and using a tenor-interpolated SHIBOR curve.",
+        "responsibility": "The group is responsible for evaluating the zero-dividend carry approximation, interpreting parity and arbitrage diagnostics, and assessing the repricing and robustness results against the stated objectives.",
+        "agent": "The coding agent integrated the expanded data, implemented and checked the rate conversion and past-fixing joins, amended classical and differentiable calibration, aligned the quote-drop comparison on identical held-out quotes, and generated the calibration tables, diagnostics, figures and regression checks.",
+    },
+    "q2": {
+        "group": "The group supplied the Q2 repository for integration and requested a full requirements audit and repair while retaining the IF0/CU0 pricing and transaction-cost hedging study.",
+        "responsibility": "The group is responsible for justifying the GBM approximation and continuous-contract calibration convention, interpreting estimator efficiency and Greek uncertainty, and assessing the economic meaning of the reported hedge P&L and CVaR.",
+        "agent": "The coding agent corrected the headline and validation z-scores, covariance normalization, maturity grid and Asian-reference uncertainty, added validation-based hedge checkpoint selection and stopping, reran the pricing and hedging experiments, and generated comparison tables, profiles, figures and regression checks.",
+    },
+    "q4": {
+        "group": "The group authorized future trade-link prediction alongside a separate static missing-edge benchmark and directed that country regions remain explicitly identified as geographical proxies for industry labels.",
+        "responsibility": "The group is responsible for assessing the top-six major-link target, the retrospective country universe and the geographical proxy interpretation, and for drawing appropriately limited conclusions from the small temporal holdout.",
+        "agent": "The coding agent corrected graph statistics and community migration, removed held-out edges before static graph features and embeddings, implemented validation-only model selection and chronological future-link prediction, and generated baseline comparisons, agreement matrices, figures and regression checks.",
+    },
+}
+
+REVIEW_STATUS = """### Report preparation and review
+
+The coding agent assembled the computational results and drafted the mathematical descriptions, tables and discussion from the saved experiment outputs.
+The group retains responsibility for the mathematical specification, verification, interpretation and final report approval.
+Final group verification and approval remain pending.
+
+### Agent provenance and session evidence
+
 OpenCode reached its provider quota; the user explicitly approved finishing these repairs in Codex, overriding the local agent requirement for this task.
 This permission does not change the examination's approved-agent rule; instructor acceptance of the Codex-authored repairs remains unresolved.
-The group must verify the mathematics and results and revise or approve this draft as its own report; no completed human review is claimed.
 Original Q1/Q4 summaries, genuine later OpenCode verification exports, recovered Q2 public implementation sessions and the public repair transcript are identified in [SESSION.md](SESSION.md).
 Unavailable original Q1/Q4 implementation exports cannot be recreated by formatting a later summary as OpenCode.
 The final `submission` tag is intentionally reserved for the group's final reviewed commit.
 """
+
+
+def statement_of_work(question=None):
+    sections = ["## Statement of work: group direction and agent contribution\n"]
+    if question is None:
+        sections.append("The group selected Q1, Q2 and Q4 and supplied the original question repositories and snapshots.\nThe following division records project direction, methodological responsibility and the coding agent's actual implementation work.\n")
+    for q in (question,) if question else ("q1", "q2", "q4"):
+        entry = WORK_DIVISION[q]
+        sections.append(f"### {q.upper()} work division\n\n**Group direction and decisions.**\n{entry['group']}\n{entry['responsibility']}\n\n**Coding-agent implementation and verification.**\n{entry['agent']}\n")
+    sections.append(REVIEW_STATUS)
+    return "\n".join(sections)
 
 
 def main(argv=None):
@@ -301,7 +340,7 @@ def main(argv=None):
     parser.parse_args(argv)
     reports={'q1':q1_report(),'q2':q2_report(),'q4':q4_report()}
     for q,text in reports.items():
-        (ROOT/f'questions/{q}/report.md').write_text(text+'\n'+OWNERSHIP)
+        (ROOT/f'questions/{q}/report.md').write_text(text+'\n'+statement_of_work(q))
     introduction="""# Advanced Programming 2026: Q1, Q2 and Q4
 
 This is the combined computational report draft for the three selected questions, with both approaches implemented under separate question folders.
@@ -330,12 +369,14 @@ Q1 repricing and calendar limitations and Q4's small sample and poor learned tes
 The `submission` tag must be created after final group review, not before it.
 
 """
+    team = "## Group members\n\n" + table(["Name", "Student code"], TEAM_MEMBERS)
+    introduction = introduction.replace("## Reproduction and comparisons", team + "\n## Reproduction and comparisons", 1)
     combined=[introduction]
     for q,text in reports.items():
         # Rebase local figure/data/session links while retaining external URLs.
         text=re.sub(r'\]\((?!https?://|#)([^)]+)\)',lambda m:f'](questions/{q}/{m[1]})',text)
         combined.append(text.replace('# '+q.upper()+'.','## '+q.upper()+'.',1))
-    combined.append(OWNERSHIP)
+    combined.append(statement_of_work())
     (ROOT/'report.md').write_text('\n\n'.join(combined))
     print('Wrote root and three question report drafts from saved metrics.')
 

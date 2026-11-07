@@ -2,8 +2,8 @@
   "scope": "Authentic saved public session exports; original Q1/Q4 implementation gaps remain documented.",
   "artifacts": {
     "sessions/codex-repairs.json": {
-      "sha256": "014aec1fa57de3ac8d7b6e9470310e0e3902720e1828dfec1cda074b71b36565",
-      "bytes": 2117634
+      "sha256": "82c3902115be71ac5b55cc983cd46435347c4b55071c1fe2a73fb459408d97f8",
+      "bytes": 2187266
     },
     "sessions/opencode/ses_e4a75060fffegrVrJnNyZIMojp.json": {
       "sha256": "a5f86e408329b0b42f1a72245b96cfb6d290c574796aa4f8cd83dd271148a759",
