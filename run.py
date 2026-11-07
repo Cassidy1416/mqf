@@ -45,7 +45,7 @@ def run_question(question, script, seed=None, offline=False, dry_run=False):
         raise RuntimeError("Install uv before running scientific stages")
     env = dict(os.environ, UV_CACHE_DIR=str(ROOT / ".cache/uv"), UV_PYTHON_INSTALL_DIR=str(ROOT / ".cache/uv/python"),
                UV_PROJECT_ENVIRONMENT=str(folder / ".venv"), PYTHONDONTWRITEBYTECODE="1",
-               PYTHONPATH=str(folder / "code"), LOKY_MAX_CPU_COUNT=str(os.cpu_count() or 1))
+               PYTHONPATH=str(folder / "code"), LOKY_MAX_CPU_COUNT="2")
     subprocess.run(command, cwd=folder, env=env, check=True)
 
 

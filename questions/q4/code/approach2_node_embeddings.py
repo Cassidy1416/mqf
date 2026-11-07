@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-os.environ.setdefault("LOKY_MAX_CPU_COUNT", str(os.cpu_count() or 1))
+os.environ.setdefault("LOKY_MAX_CPU_COUNT", "2")
 import argparse
 import hashlib
 import sys
