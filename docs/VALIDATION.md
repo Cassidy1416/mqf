@@ -35,3 +35,6 @@ Both Q4 learned tasks were rerun after that numerical change.
 SciPy SLSQP can still report that a trial iterate was clipped to bounds; final solver status and arbitrage checks, rather than the trial step, determine the reported calibration outcome.
 
 The launcher and direct Q4 entrypoint cap joblib CPU discovery at two workers, matching the explicit two-thread scientific setup and avoiding the macOS physical-core probe warning.
+
+Final archive validation also caught a root-test fixture assuming `.cache/` already existed.
+The suite now creates its own repository-local fixture directory, so root tests run before any uv installation or cache setup.

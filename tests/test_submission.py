@@ -11,6 +11,10 @@ from snapshot_io import safe_path, verify_manifest, enrich_manifest
 
 
 class SubmissionContracts(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        (ROOT / ".cache").mkdir(exist_ok=True)
+
     def test_comparison_rejects_nonfinite_values(self):
         spec = importlib.util.spec_from_file_location("suite_compare_test", ROOT / "code/compare.py")
         compare = importlib.util.module_from_spec(spec)
