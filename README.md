@@ -1,7 +1,10 @@
-This repository integrates the Advanced Programming experiments for Q1, Q2 and Q4 as self-contained question folders.
-Run everything from the root with `python3 run.py {q1,q2,q4,all} [--stage {verify,approach1,approach2,compare,all,index}] [--seed 42] [--offline] [--dry-run]`.
-Useful commands are `python3 run.py all --stage verify`, `python3 run.py q2 --offline` and `python3 run.py all --offline`.
-Verification of committed snapshots needs only the standard library, while experiment stages need `uv` and the per-question locked environments.
-`--offline` requires each question's dependencies to be installed already; omitting it allows dependency installation but never vendor-data refresh.
-Each question keeps its own pinned `pyproject.toml` and `uv.lock` in its directory and runs with that lock.
-See `docs/INTEGRATION.md` for the directory layout, data provenance and session-export status.
+# MQF Advanced Programming: Q1, Q2 and Q4
+One repository, with isolated code, data, results and pinned environments under `questions/q1`, `questions/q2` and `questions/q4`.
+Requires Python 3.13 and uv; run all approaches and comparisons from this root:
+```sh
+python3 run.py all --seed 42
+```
+After installation, use `python3 run.py all --offline --seed 42` for one-command offline reproduction.
+Verify snapshots: `python3 data/fetch.py --offline`; test: `python3 run.py all --stage test --offline` and `python3 -m unittest discover -s tests -v`.
+Rebuild report tables: `python3 code/build_report.py`; see [report](report.md), [audit](docs/REQUIREMENTS_AUDIT.md), [comparisons](results/comparison.html) and [session evidence](SESSION.md).
+The report is a computational draft pending group review; Q1/Q4 historical session gaps and the approved Codex exception are documented.

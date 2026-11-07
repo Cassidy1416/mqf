@@ -1,6 +1,10 @@
-# China Trade Network
-Builds annual China-partner trade graphs from the public UN Comtrade API.
-Approach 1 evaluates MST, Louvain communities, centrality, and temporal migration.
-Approach 2 implements node2vec, link prediction, and heuristic baselines in PyTorch.
-Requires Python 3.13/3.14 and `uv`; all stochastic runs default to seed 42.
-Run: `uv sync && python data/fetch.py --seed 42 && python code/approach1_network_analytics.py --seed 42 && python code/approach2_node_embeddings.py --seed 42 && python code/compare.py`.
+# Q4: MQF Advanced Programming
+Trade-network analytics, corrected static edge recovery and chronological future major-link prediction.
+From the combined repository root, run the isolated pinned environment:
+```sh
+python3 run.py q4 --seed 42
+```
+After dependency installation, add `--offline`; snapshots always use verified committed data unless an explicit online refresh is requested.
+From this question directory, the equivalent launcher is `python3 ../../run.py q4 --offline --seed 42`.
+Use root stages `--stage verify`, `--stage test`, `--stage approach1`, `--stage approach2`, or `--stage compare`; Q4 also has `--stage future`.
+See [report](report.md), [session evidence](SESSION.md) and [root reproduction contract](../../AGENTS.md).

@@ -1,28 +1,34 @@
-# Agent Contract
+# Q1 agent contract
 
-## Goal
+## Goal and ownership
 
-Build a reproducible study of China ETF and CSI 300 option implied-volatility surfaces. The project must implement both the classical market pipeline and the differentiable PyTorch calibration pipeline, including Black–Scholes inversion, SVI fitting, neural-surface calibration, no-arbitrage diagnostics, robustness tests, and comparison tables.
+Follow the combined [project contract](../../AGENTS.md) and this question's [mathematical protocol](report.md).
+Implement and verify both approaches for Q1 with the documented data, metrics, seeds and limitations.
+The group directs methodology and must review the final report and results.
+The user's current repair-task exception permits direct Codex implementation after OpenCode exhausted its quota; preserve actual agent provenance in session evidence.
 
-## Environment and commands
+## Environment and exact commands
 
-Use Python 3.13 or 3.14 with `uv`. Install pinned dependencies from `pyproject.toml`. The canonical commands are:
+Use Python 3.13 with this folder's pinned `pyproject.toml` and `uv.lock`.
+From the combined repository root run:
 
-```bash
-uv venv --python 3.13
-source .venv/bin/activate
-uv sync
-python data/fetch.py --seed 42
-python code/approach1_market_pipeline.py --seed 42
-python code/approach2_differentiable.py --seed 42
-python code/compare.py
+```sh
+python3 run.py q1 --seed 42
+python3 run.py q1 --stage test --offline
 ```
 
-## Reproducibility conventions
+After installation, add `--offline` to the full run for network-free reproduction.
+From this folder the equivalent command is `python3 ../../run.py q1 --offline --seed 42`.
+The launcher isolates the working directory, uv environment and in-repository caches.
 
-The default seed is 42 and every stochastic operation accepts `--seed`. Historical snapshots are committed when permitted by the assignment; otherwise fetch scripts, metadata, and SHA-256 checksums are committed. Each approach writes `results/approachN/<dataset>/metrics.json` with keys `params`, `metrics`, `fit_seconds`, and `history`. Figures are self-contained Plotly HTML files.
+## Conventions and session rules
 
-## Agent rules
-
-Work only inside this repository. Keep caches in ignored in-repository directories. Propose destructive or irreversible actions before performing them. Preserve raw inputs, provenance, and failed-fit diagnostics. Make a conventional Git commit after each milestone. Mathematical choices, assumptions, and limitations must be reviewed by the group and recorded in `report.md`.
-
+Use seed 42 by default and record split, initialization and training seeds.
+Verify immutable snapshots against the manifest before experiments; retain original data archives and provenance.
+Expose argparse CLIs, Rich summaries and standalone Plotly HTML.
+Write question-local metrics with `params`, `metrics`, `fit_seconds` and `history`.
+Use held-out evaluation and validation-only model selection; preserve all failure and exclusion diagnostics.
+Keep all writes and caches in the repository, never commit credentials and obtain approval before destructive operations.
+Make conventional milestone commits and keep authentic readable session evidence.
+Do not rewrite historical summaries into invented implementation transcripts.
+Reserve the `submission` tag for final group review.

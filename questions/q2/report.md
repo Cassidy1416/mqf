@@ -1,140 +1,195 @@
-# Q2. Monte Carlo pricing and hedging on Chinese futures
+# Q2. Monte Carlo pricing and transaction-cost hedging
 
-I first checked that the simulator could reproduce a Black-Scholes price.
-Then I used the same daily grid to compare pricing estimators and test whether the learned hedge reduced losses after trading costs.
+## Data, model and reproducible protocol
 
-## Data and setup
+The committed snapshots contain IF0 and CU0 continuous futures daily closes, CSI 300 reference-index observations and eight-tenor SHIBOR fixings obtained through AKShare.
+The [manifest](data/metadata.json) records query, retrieval date, source, schema, hashes and units.
+Calibration uses 2020-01-02 through 2025-12-31, with 1,455 closes and 1,454 log returns per contract.
+IF0 and CU0 are Sina continuous main-contract series; vendor-selected contract rolls are retained without an independently reconstructed roll calendar or back adjustment.
+Roll jumps may affect estimated volatility and drift.
+For $x_t=\log(S_t/S_{t-1})$, $\hat\sigma=\sqrt{252}s_x$ and $\hat\mu=252\bar x+\hat\sigma^2/2$.
+Historical drift is reported but does not replace the risk-neutral drift in pricing.
+At the 2025-12-31 valuation date, the one-year SHIBOR quote 1.65% becomes $r=\log(1+0.0165)=0.0163653541$.
+The rate helper interpolates the available simple quotes by tenor before conversion; at this exact one-year tenor no interpolation is needed.
 
-I used daily IF0 and CU0 futures closes from Sina Finance, the CSI 300 cash index from Eastmoney, and SHIBOR fixings from Jin10, all retrieved through AKShare.
-The calibration window was January 2, 2020 through December 31, 2025, with 1,455 closes and 1,454 log returns per contract.
-The loader verifies the committed snapshots against the [data manifest](data/metadata.json).
-The CSI 300 cash index is a reference series.
-The model inputs come from the futures closes.
+| Contract | S0 | Annual sigma | Annual mu | Log drift |
+| --- | --- | --- | --- | --- |
+| IF0 | 4599.8 | 0.2031 | 0.038026 | 0.017401 |
+| CU0 | 98240 | 0.1787 | 0.13571 | 0.11975 |
 
-For daily log returns $x_t=\log(S_t/S_{t-1})$, I estimated annualized volatility as $\hat\sigma=\sqrt{252}\,s_x$ and historical GBM drift as $\hat\mu=252\,\bar x+\hat\sigma^2/2$.
+Both engines implement exact GBM steps $S_{i+1}=S_i\exp[(r-\sigma^2/2)\Delta t+\sigma\sqrt{\Delta t}Z_i]$, with $Z_i$ independent standard normal and $m=\lceil252T\rceil$, $\Delta t=T/m$.
+This is the assignment's GBM approximation to a futures-price input; it does not model margined futures settlement or a full commodity term structure.
+The strike is $K=S_0$, maturity one year, and each pricing engine uses 100,000 paths on 252 daily steps.
+The Asian payoff is $(m^{-1}\sum_{i=1}^m S_i-K)^+$, the barrier payoff is $(S_T-K)^+1_{\max_i S_i<1.5S_0}$ with daily monitoring and zero rebate, and the digital pays $1_{S_T>K}$.
+Each price is the discounted sample mean and its standard error is the sample standard deviation divided by the square root of the number of independent observations.
+SeedSequence-derived training, validation and testing streams are separate; NumPy testing further separates headline prices, estimator comparisons, Greeks and convergence analysis.
+No seed is selected for favorable outcomes.
 
-| Contract | Last close | Annual volatility | Annual GBM drift |
-|---|---:|---:|---:|
-| IF0 | 4,599.80 | 20.31% | 3.80% |
-| CU0 | 98,240.00 | 17.87% | 13.57% |
+## Pricing and Black-Scholes verification
 
-I valued the options on December 31, 2025 with a one-year maturity.
-I interpolate SHIBOR simple quotes by tenor and convert the selected quote $q$ to $r=\log(1+qT)/T$.
-The one-year fixing of 1.65% gives $r=1.6365\%$.
-Under the assignment's pricing model, each daily step is
+For the European call, $C_{BS}=S_0\Phi(d_1)-Ke^{-rT}\Phi(d_2)$ with $d_1=[\log(S_0/K)+(r+\sigma^2/2)T]/(\sigma\sqrt T)$ and $d_2=d_1-\sigma\sqrt T$.
+The reported headline z-score is computed from that same price and standard error; NumPy's separate validation run has its own z-score.
 
-$$
-S_{i+1}=S_i\exp\!\left[(r-\hat\sigma^2/2)\Delta t+\hat\sigma\sqrt{\Delta t}\,Z_i\right],
-\qquad Z_i\overset{\mathrm{iid}}{\sim}N(0,1).
-$$
+| Contract | Run | Price | SE | Black-Scholes | z |
+| --- | --- | --- | --- | --- | --- |
+| IF0 | NumPy headline | 405.55 | 2.0152 | 407.57 | -1.0012 |
+| IF0 | NumPy independent validation | 403.63 | 2.005 | 407.57 | -1.964 |
+| IF0 | Torch headline | 406.79 | 2.0242 | 407.57 | -0.38412 |
+| CU0 | NumPy headline | 7815.2 | 37.76 | 7763.8 | 1.3602 |
+| CU0 | NumPy independent validation | 7784.4 | 37.701 | 7763.8 | 0.54487 |
+| CU0 | Torch headline | 7748.1 | 37.71 | 7763.8 | -0.41738 |
 
-Both engines use 252 steps, 100,000 paths for pricing, and seed 42 with separate random streams.
-The strike is $K=S_0$.
-The arithmetic Asian pays $(\bar S-K)^+$, averaging the 252 observations after time zero.
-The up-and-out pays $(S_T-K)^+$ if the price stays below $1.5S_0$ at every monitoring date, with zero rebate.
-The digital pays one unit if $S_T>K$.
-All prices are discounted sample means.
+All displayed European checks satisfy $|z|\le3$.
 
-## Q2A. Pricing accuracy and efficiency
+| Contract | Engine | Asian price / SE | Up-and-out price / SE | Digital price / SE |
+| --- | --- | --- | --- | --- |
+| IF0 | NumPy | 230.81 / 1.114 | 313.06 / 1.5397 | 0.48311 / 0.0015552 |
+| IF0 | Torch | 232.33 / 1.1187 | 311.82 / 1.5404 | 0.48111 / 0.0015551 |
+| CU0 | NumPy | 4436.8 / 21.019 | 6729.1 / 31.908 | 0.49473 / 0.0015555 |
+| CU0 | Torch | 4416.9 / 20.921 | 6704.5 / 31.975 | 0.49003 / 0.0015555 |
 
-I tested the European call first using $z=(\widehat C_{\mathrm{MC}}-C_{\mathrm{BS}})/\mathrm{SE}$.
-All four checks passed the assignment's $|z|\leq3$ threshold.
-The NumPy validation stream is separate from its headline pricing run.
+## Variance reduction, Greeks and convergence
 
-| Contract | Engine | European validation price ± SE | Black-Scholes | z |
-|---|---|---:|---:|---:|
-| IF0 | NumPy | 403.63 ± 2.01 | 407.57 | -1.964 |
-| IF0 | PyTorch | 406.79 ± 2.02 | 407.57 | -0.384 |
-| CU0 | NumPy | 7,784.36 ± 37.70 | 7,763.82 | +0.545 |
-| CU0 | PyTorch | 7,748.08 ± 37.71 | 7,763.82 | -0.417 |
+Antithetic estimates average the discounted payoffs from $Z$ and $-Z$ before computing their standard errors.
+At the same total simulated path count, the variance reduction ratio is $SE_{plain}^2/SE_{method}^2$.
+For the Asian control, $\hat C=\bar X-\hat\beta(\bar Y-EY)$, with $\hat\beta=\widehat{\mathrm{Cov}}(X,Y)/\widehat{\mathrm{Var}}(Y)$ computed using consistent sample normalization.
+Here $Y$ is the discounted geometric-Asian payoff.
+For $t_i=i\Delta t$, geometric log mean is $a=\log S_0+(r-\sigma^2/2)\Delta t(m+1)/2$ and variance is $v=\sigma^2\Delta t(m+1)(2m+1)/(6m)$.
+The closed form is $EY=e^{-rT}[e^{a+v/2}\Phi(d_1)-K\Phi(d_2)]$, where $d_2=(a-\log K)/\sqrt v$ and $d_1=d_2+\sqrt v$.
+The estimated control coefficient has finite-sample uncertainty; this same-sample fit is not an exact unbiased oracle coefficient.
 
-The entries below are price ± one Monte Carlo standard error.
+| Contract | Payoff | Antithetic variance ratio | Geometric-CV variance ratio |
+| --- | --- | --- | --- |
+| IF0 | european | 1.7431 | n/a |
+| IF0 | asian | 1.7787 | 1388 |
+| IF0 | up_and_out | 1.6922 | n/a |
+| IF0 | digital | 30.225 | n/a |
+| CU0 | european | 1.7636 | n/a |
+| CU0 | asian | 1.8561 | 1760 |
+| CU0 | up_and_out | 1.789 | n/a |
+| CU0 | digital | 291.19 | n/a |
 
-| Contract | Engine | Arithmetic Asian | Up-and-out | Digital |
-|---|---|---:|---:|---:|
-| IF0 | NumPy | 230.81 ± 1.11 | 313.06 ± 1.54 | 0.4831 ± 0.0016 |
-| IF0 | PyTorch | 232.33 ± 1.12 | 311.82 ± 1.54 | 0.4811 ± 0.0016 |
-| CU0 | NumPy | 4,436.75 ± 21.02 | 6,729.13 ± 31.91 | 0.4947 ± 0.0016 |
-| CU0 | PyTorch | 4,416.94 ± 20.92 | 6,704.53 ± 31.97 | 0.4900 ± 0.0016 |
+For European pathwise delta, the path contribution is $e^{-rT}1_{S_T>K}S_T/S_0$; vega is $e^{-rT}1_{S_T>K}S_T(\sqrt T Z-\sigma T)$.
+For the Asian call, replace terminal derivatives by the average of each monitored state's derivative and use the Asian in-the-money indicator.
+Central finite differences use common random numbers, $[P(x+h)-P(x-h)]/(2h)$.
+Spot bumps are $0.1S_0,0.01S_0,0.001S_0$; vega bumps are absolute volatility increments 0.005, 0.002 and 0.001, because volatility and spot have different units.
+Pathwise estimates are reported for continuous call payoffs; no invalid pathwise derivative is claimed for the discontinuous digital or barrier.
 
-At equal path counts, I compared the plain estimator with averages of the paired shocks $Z$ and $-Z$.
-I computed antithetic standard errors from the pair averages and report variance ratios as squared standard-error ratios.
-For the arithmetic Asian I also used the discounted geometric Asian payoff $Y$ as a control, with $\widehat C_{\mathrm{CV}}=\bar X-\hat\beta(\bar Y-E[Y])$ and $\hat\beta=\widehat{\mathrm{Cov}}(X,Y)/\widehat{\mathrm{Var}}(Y)$.
-Here $X$ is the discounted arithmetic Asian payoff and $E[Y]$ is the lognormal call value on the geometric mean over the same observation dates.
-For $m$ dates $t_i=i\Delta t$, the geometric mean has log mean $a=\log S_0+(r-\sigma^2/2)\Delta t(m+1)/2$ and log variance $v=\sigma^2\Delta t(m+1)(2m+1)/(6m)$.
-The control value is $E[Y]=e^{-rT}[e^{a+v/2}\Phi(d_1)-K\Phi(d_2)]$, where $d_2=(a-\log K)/\sqrt v$ and $d_1=d_2+\sqrt v$.
+| Contract | Payoff | Greek | Method / bump | Estimate | SE | Analytic vanilla |
+| --- | --- | --- | --- | --- | --- | --- |
+| IF0 | european | delta | pathwise | 0.56913 | 0.0026463 | 0.57226 |
+| IF0 | european | delta | 10.000% | 0.56405 | 0.0023897 | 0.57226 |
+| IF0 | european | delta | 1.000% | 0.56943 | 0.0026229 | 0.57226 |
+| IF0 | european | delta | 0.100% | 0.56915 | 0.0026443 | 0.57226 |
+| IF0 | asian | delta | pathwise | 0.54323 | 0.0024404 | n/a |
+| IF0 | asian | delta | 10.000% | 0.53379 | 0.0019527 | n/a |
+| IF0 | asian | delta | 1.000% | 0.5429 | 0.0023954 | n/a |
+| IF0 | asian | delta | 0.100% | 0.5432 | 0.0024362 | n/a |
+| IF0 | european | vega | pathwise | 1803.9 | 15.315 | 1804.9 |
+| IF0 | european | vega | 0.005 | 1803.9 | 15.314 | 1804.9 |
+| IF0 | european | vega | 0.002 | 1803.9 | 15.314 | 1804.9 |
+| IF0 | european | vega | 0.001 | 1803.9 | 15.314 | 1804.9 |
+| IF0 | asian | vega | pathwise | 1050.6 | 8.2357 | n/a |
+| IF0 | asian | vega | 0.005 | 1050.6 | 8.2356 | n/a |
+| IF0 | asian | vega | 0.002 | 1050.6 | 8.2357 | n/a |
+| IF0 | asian | vega | 0.001 | 1050.6 | 8.2357 | n/a |
+| CU0 | european | delta | pathwise | 0.57015 | 0.0025836 | 0.57179 |
+| CU0 | european | delta | 10.000% | 0.56269 | 0.0022862 | 0.57179 |
+| CU0 | european | delta | 1.000% | 0.5699 | 0.0025574 | 0.57179 |
+| CU0 | european | delta | 0.100% | 0.57006 | 0.0025812 | 0.57179 |
+| CU0 | asian | delta | pathwise | 0.54214 | 0.0024088 | n/a |
+| CU0 | asian | delta | 10.000% | 0.53201 | 0.0018506 | n/a |
+| CU0 | asian | delta | 1.000% | 0.5425 | 0.0023565 | n/a |
+| CU0 | asian | delta | 0.100% | 0.54217 | 0.0024037 | n/a |
+| CU0 | european | vega | pathwise | 38260 | 314.8 | 38556 |
+| CU0 | european | vega | 0.005 | 38262 | 314.79 | 38556 |
+| CU0 | european | vega | 0.002 | 38261 | 314.79 | 38556 |
+| CU0 | european | vega | 0.001 | 38260 | 314.8 | 38556 |
+| CU0 | asian | vega | pathwise | 22273 | 171.12 | n/a |
+| CU0 | asian | vega | 0.005 | 22273 | 171.12 | n/a |
+| CU0 | asian | vega | 0.002 | 22273 | 171.12 | n/a |
+| CU0 | asian | vega | 0.001 | 22273 | 171.12 | n/a |
 
-| Contract | Asian antithetic variance ratio | Asian control variance ratio | Control price ± SE |
-|---|---:|---:|---:|
-| IF0 | 1.78× | 1,388× | 232.50 ± 0.03 |
-| CU0 | 1.86× | 1,760× | 4,419.86 ± 0.50 |
+Large spot bumps smooth the payoff kink and introduce visible truncation bias, especially for the Asian delta.
+The smaller common-random-number bumps converge to the pathwise estimates within the displayed Monte Carlo errors; small bumps do not eliminate sampling uncertainty.
+The Asian has no claimed analytic Greek benchmark.
 
-The geometric control reduced variance the most because the two averages use the same paths and fixing dates.
-I measured RMSE from 100 to 30,000 paths using repeated runs, with Black-Scholes as the European reference and an independent 1,000,000-pair estimate as the Asian reference.
-The log–log slopes ranged from −0.534 to −0.471, close to the expected −0.5.
+| Contract | RMSE series | Log-log slope | Fitted RMSE at N=1000 |
+| --- | --- | --- | --- |
+| IF0 | plain_european | -0.48307 | 20.996 |
+| IF0 | antithetic_european | -0.52154 | 15.625 |
+| IF0 | plain_asian | -0.47092 | 11.757 |
+| IF0 | antithetic_asian | -0.48331 | 8.7617 |
+| IF0 | cv_asian | -0.52356 | 0.29087 |
+| CU0 | plain_european | -0.50078 | 378.33 |
+| CU0 | antithetic_european | -0.47397 | 293.7 |
+| CU0 | plain_asian | -0.48166 | 213 |
+| CU0 | antithetic_asian | -0.49759 | 156.32 |
+| CU0 | cv_asian | -0.48285 | 5.0552 |
 
-I checked delta and vega for the European and arithmetic Asian calls on 50,000 paths.
-Writing $L=S_T$ or $L=\bar S$, the pathwise samples are $e^{-rT}1_{L>K}L/S_0$ for delta and $e^{-rT}1_{L>K}\partial_\sigma L$ for vega, with $\partial_\sigma S_t=S_t(W_t-\sigma t)$.
-The central differences use the same shocks for both bumps, with the strike held fixed.
-Delta bumps were 10%, 1%, and 0.1% of spot, and vega bumps were 0.005, 0.002, and 0.001 in volatility units.
-For example, IF0 European delta was 0.5691 pathwise versus 0.5694 at the 1% bump, with standard errors near 0.0026.
-The larger bump smooths more of the strike kink and can add bias, while shared shocks kept sampling noise similar across the bump sizes.
+The path-count grid is 100, 300, 1,000, 3,000, 10,000 and 30,000, with 4,096, 1,024, 512, 256, 64 and 32 independent replications respectively.
+The Asian reference is an independent one-million-pair antithetic plus geometric-control estimate, with the coefficient and standard error computed on independent pair averages.
+Its finite uncertainty is retained below rather than treating an ordinary noisy MC estimate as exact truth.
+Slopes near -0.5 support the expected Monte Carlo order over this finite range; they do not constitute an asymptotic proof.
 
-The loop and NumPy benchmark used the same workload of 1,024 paths × 252 steps.
-The mean `timeit` runtimes were 40.5 ms for the loop and 2.8 ms for NumPy on IF0, and 40.3 ms for the loop and 2.6 ms for NumPy on CU0.
-The IF0 [profile](results/approach1/if0/performance_profile.txt) identifies the scalar normal generator as the main cost inside the Python loop.
-The [IF0](results/approach1/if0/estimators.html) and [CU0](results/approach1/cu0/estimators.html) figures show the convergence and Greek checks.
+| Contract | Asian reference | Reference SE | Scalar seconds | Vectorized seconds | Speedup |
+| --- | --- | --- | --- | --- | --- |
+| IF0 | 232.46 | 0.0066694 | 0.041625 | 0.0027069 | 15.377 |
+| CU0 | 4419.9 | 0.11104 | 0.041767 | 0.0027429 | 15.227 |
 
-## Q2B. Hedging after transaction costs
+The timing comparison uses 1,024 paths on the same daily grid, and cProfile identifies the scalar normal-draw/exponential loop as the hot path.
+Machine-dependent timings are evidence of this run, rather than fixed performance guarantees.
+Profiles: [IF0](results/approach1/if0/performance_profile.txt), [CU0](results/approach1/cu0/performance_profile.txt).
 
-I used a short at-the-money European call for the hedge comparison because it has an exact Black-Scholes delta.
-The PyTorch engine also prices the three exotic options above.
-The hedge is a one-hidden-layer MLP with 16 units, tanh activation, and a sigmoid output, taking $S_t/S_0$ and $t$ as inputs.
-I used the assignment's terminal P&L, with gains accrued to expiry, the fee charged on each change in position including entry, and the call payoff deducted at maturity.
+## Deep hedging protocol and held-out results
 
-$$
-V_T=\sum_j e^{r(T-t_j)}\Delta_j(S_{t_{j+1}}-S_{t_j})
--\kappa\sum_j|\Delta_j-\Delta_{j-1}|S_{t_j}-(S_T-K)^+,
-\qquad \Delta_{-1}=0.
-$$
+The hedge sells one at-the-money European call; Asian, barrier and digital prices above do not imply that those payoffs were separately hedged.
+A one-hidden-layer width-16 MLP maps $(S_t/S_0,t)$ to a bounded position.
+The experiment uses the assignment's terminal accounting $V_T=\sum_t e^{r(T-t)}\Delta_t(S_{t+\Delta t}-S_t)-\kappa\sum_t|\Delta_t-\Delta_{t-1}|S_t-(S_T-K)^+$.
+Entry trade cost is charged with $\Delta_{-1}=0$; no option premium is added and no terminal stock liquidation cost is charged under this stated convention.
+Negative expected P&L therefore includes the sold claim's value and must not be interpreted as a premium-inclusive trading loss.
+The empirical training loss is the mean of the worst 5% sample losses, a quantile-tail CVaR95 approximation.
+Each cost/frequency case trains on at least $2^{17}=131,072$ paths, validates on 8,192 independent paths and tests on 32,768 held-out paths.
+Adam uses learning rate 0.003 and batches of 4,096, with at most 100 epochs.
+Checkpoint selection uses only S0-normalized validation CVaR, patience ten and minimum improvement $10^{-5}$.
+The table reports actual trained epochs, best validation epoch and termination reason; reaching the epoch cap is not proof of convergence.
+The Black-Scholes hedge and learned hedge share the same held-out paths for each case.
 
-I trained a separate model for each contract, frequency, and cost.
-Each fit used Adam at 0.003 for five epochs on 131,072 paths in batches of 4,096, minimizing the mean of the worst 5% of simulated losses $-V_T$.
-I selected the epoch on 8,192 validation paths and compared both strategies on the same 32,768 fresh test paths.
+| Contract | Days | Cost bp | Learned CVaR | BS CVaR | Learned mean | BS mean | Learned variance | BS variance | Epochs / best | Stop |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| IF0 | 1 | 0 | 434.45 | 427.18 | -371.6 | -370.23 | 1984.3 | 936.6 | 100 / 98 | max_epochs_reached |
+| IF0 | 1 | 10 | 459.81 | 458.98 | -394.53 | -395.91 | 2152.4 | 1045.1 | 100 / 99 | max_epochs_reached |
+| IF0 | 1 | 50 | 549.99 | 611.74 | -474.97 | -498.61 | 2798.6 | 2974.2 | 100 / 99 | max_epochs_reached |
+| IF0 | 5 | 0 | 475.2 | 478.15 | -371.5 | -370.39 | 3739.2 | 2464.4 | 100 / 100 | max_epochs_reached |
+| IF0 | 5 | 10 | 488.07 | 495.13 | -383.03 | -383.4 | 3862.7 | 2525.1 | 100 / 100 | max_epochs_reached |
+| IF0 | 5 | 50 | 537.31 | 567.13 | -426.81 | -435.4 | 4350.6 | 3070.5 | 100 / 100 | max_epochs_reached |
+| IF0 | 21 | 0 | 567.96 | 584.74 | -370.41 | -369.5 | 10546 | 8568.7 | 100 / 99 | max_epochs_reached |
+| IF0 | 21 | 10 | 575.44 | 594.2 | -376.9 | -376.89 | 10699 | 8656.3 | 100 / 99 | max_epochs_reached |
+| IF0 | 21 | 50 | 604.83 | 632.54 | -402.29 | -406.42 | 11300 | 9057.4 | 100 / 99 | max_epochs_reached |
+| CU0 | 1 | 0 | 8191.9 | 8074.8 | -6984.7 | -6952.5 | 7.4543e+05 | 3.7225e+05 | 100 / 100 | max_epochs_reached |
+| CU0 | 1 | 10 | 8731.3 | 8742.3 | -7469 | -7500.9 | 8.1724e+05 | 4.2459e+05 | 100 / 100 | max_epochs_reached |
+| CU0 | 1 | 50 | 10638 | 12023 | -9153.1 | -9694.5 | 1.0961e+06 | 1.3151e+06 | 100 / 99 | max_epochs_reached |
+| CU0 | 5 | 0 | 8957.1 | 9013.5 | -6986.1 | -6955.9 | 1.378e+06 | 9.1184e+05 | 100 / 100 | max_epochs_reached |
+| CU0 | 5 | 10 | 9230.2 | 9372 | -7231.6 | -7233.6 | 1.4266e+06 | 9.3925e+05 | 100 / 100 | max_epochs_reached |
+| CU0 | 5 | 50 | 10275 | 10912 | -8152.2 | -8344.2 | 1.6343e+06 | 1.1866e+06 | 100 / 98 | max_epochs_reached |
+| CU0 | 21 | 0 | 10694 | 11005 | -6965.4 | -6939 | 3.7779e+06 | 3.067e+06 | 100 / 99 | max_epochs_reached |
+| CU0 | 21 | 10 | 10853 | 11207 | -7104.2 | -7096.7 | 3.8341e+06 | 3.1032e+06 | 100 / 99 | max_epochs_reached |
+| CU0 | 21 | 50 | 11474 | 12024 | -7642.9 | -7727.3 | 4.0621e+06 | 3.271e+06 | 100 / 99 | max_epochs_reached |
 
-Each cell reports **learned hedge / Black-Scholes delta** in the instrument's price units, with squared price units for variance.
+The learned strategy has lower held-out CVaR in 15 of 18 cases; no claim of universal outperformance is supported.
+Transaction costs penalize frequent position changes, so the interaction with rebalancing frequency matters more than a single headline score.
+Only seed 42 is the primary experiment; robustness across training seeds and confidence intervals for CVaR differences remain limitations, not assignment-required results that have been silently assumed.
+Seeded CPU training uses two threads and can retain last-bit differences across platforms.
+Figures and validation histories: [NumPy IF0](results/approach1/if0/figures.html), [NumPy CU0](results/approach1/cu0/figures.html), [hedging IF0](results/approach2/if0/figures.html), [hedging CU0](results/approach2/cu0/figures.html) and [comparison](results/comparison.html).
 
-| Contract | Days | Cost (bp) | 95% CVaR of loss | Mean P&L | P&L variance |
-|---|---:|---:|---:|---:|---:|
-| IF0 | 1 | 0 | 694.21 / 427.18 | -370.38 / -370.23 | 27,657 / 937 |
-| IF0 | 1 | 10 | 709.42 / 458.98 | -383.91 / -395.91 | 27,786 / 1,045 |
-| IF0 | 1 | 50 | 768.19 / 611.74 | -435.90 / -498.61 | 28,476 / 2,974 |
-| IF0 | 5 | 0 | 704.67 / 478.15 | -370.47 / -370.39 | 28,795 / 2,464 |
-| IF0 | 5 | 10 | 713.74 / 495.13 | -378.08 / -383.40 | 28,963 / 2,525 |
-| IF0 | 5 | 50 | 746.11 / 567.13 | -407.62 / -435.40 | 29,201 / 3,070 |
-| IF0 | 21 | 0 | 743.88 / 584.74 | -370.19 / -369.50 | 33,249 / 8,569 |
-| IF0 | 21 | 10 | 749.56 / 594.20 | -374.99 / -376.89 | 33,348 / 8,656 |
-| IF0 | 21 | 50 | 768.66 / 632.54 | -394.05 / -406.42 | 33,352 / 9,057 |
-| CU0 | 1 | 0 | 14,022.37 / 8,074.83 | -6,959.38 / -6,952.55 | 11,793,391 / 372,250 |
-| CU0 | 1 | 10 | 14,313.21 / 8,742.25 | -7,216.54 / -7,500.95 | 11,849,531 / 424,588 |
-| CU0 | 1 | 50 | 15,510.04 / 12,022.63 | -8,177.63 / -9,694.54 | 12,290,241 / 1,315,118 |
-| CU0 | 5 | 0 | 14,171.01 / 9,013.55 | -6,961.05 / -6,955.90 | 12,106,748 / 911,837 |
-| CU0 | 5 | 10 | 14,324.81 / 9,371.98 | -7,106.96 / -7,233.56 | 12,106,774 / 939,247 |
-| CU0 | 5 | 50 | 15,007.45 / 10,911.71 | -7,677.95 / -8,344.24 | 12,311,450 / 1,186,636 |
-| CU0 | 21 | 0 | 14,732.41 / 11,005.20 | -6,954.94 / -6,938.98 | 13,357,217 / 3,066,979 |
-| CU0 | 21 | 10 | 14,823.66 / 11,206.51 | -7,052.27 / -7,096.65 | 13,339,678 / 3,103,163 |
-| CU0 | 21 | 50 | 15,298.18 / 12,024.23 | -7,433.46 / -7,727.34 | 13,537,197 / 3,271,041 |
+## Statement of work and review status
 
-Black-Scholes had lower test CVaR in all 18 cases.
-For example, at daily rebalancing on IF0, raising costs from 0 to 50 bp increased the learned hedge's CVaR from 694.21 to 768.19 and the benchmark's from 427.18 to 611.74.
-The learned hedge's mean P&L was better at 50 bp in that case, but the extra dispersion left its tail loss higher.
-The [comparison page](results/comparison.html) contains the full ranking, and the [IF0](results/approach2/if0/figures.html) and [CU0](results/approach2/cu0/figures.html) charts show the cost and frequency effects.
-
-## Limits
-
-The continuous futures series use vendor rolls without a separate roll adjustment, so roll moves can affect calibration.
-The simulation follows the assignment's GBM convention with a constant rate for the chosen maturity and tests hedges on simulated paths.
-The Greek and RMSE comparisons focus on European and arithmetic Asian calls.
-All 18 learned policies selected the final epoch on validation, so the five-epoch run leaves training convergence open.
-The hedge result applies to the European call and this experiment setup.
-Use the [README command](README.md) to regenerate the tables and figures from the saved snapshots.
+The group selected Q1, Q2 and Q4 and supplied the original repositories and snapshots.
+During the repair session the user approved expanding Q1 chain coverage with an interpolated SHIBOR curve, adding chronological future trade-link prediction while retaining a static benchmark, and explicitly identifying country regions as a geographical proxy.
+The agent audited requirements, reproduced faults, amended code, ran experiments and tests, generated figures, assembled computational tables and drafted this report.
+OpenCode reached its provider quota; the user explicitly approved finishing these repairs in Codex, overriding the local agent requirement for this task.
+This permission does not change the examination's approved-agent rule; instructor acceptance of the Codex-authored repairs remains unresolved.
+The group must verify the mathematics and results and revise or approve this draft as its own report; no completed human review is claimed.
+Original Q1/Q4 summaries, genuine later OpenCode verification exports, recovered Q2 public implementation sessions and the public repair transcript are identified in [SESSION.md](SESSION.md).
+Unavailable original Q1/Q4 implementation exports cannot be recreated by formatting a later summary as OpenCode.
+The final `submission` tag is intentionally reserved for the group's final reviewed commit.

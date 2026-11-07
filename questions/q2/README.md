@@ -1,8 +1,10 @@
-# MQF Advanced Programming
-Q2 prices options on IF0 and CU0 with NumPy and PyTorch and compares transaction-cost hedges.
-From the repo root, run the following command with Python 3.13 and uv.
+# Q2: MQF Advanced Programming
+Monte Carlo variance reduction, Greeks and transaction-cost hedges on IF0 and CU0.
+From the combined repository root, run the isolated pinned environment:
 ```sh
-export UV_CACHE_DIR="$PWD/.cache/uv"; uv sync --locked --python 3.13 && uv run --locked python data/fetch.py --question q2 --offline && uv run --locked python code/approach1_q2.py --seed 42 && uv run --locked python code/approach2_q2.py --seed 42 && uv run --locked python code/compare.py
+python3 run.py q2 --seed 42
 ```
-The runs use committed snapshots and write metrics and standalone HTML to `results/`.
-After installing dependencies, add `--offline` to each uv command to reproduce without network access.
+After dependency installation, add `--offline`; snapshots always use verified committed data unless an explicit online refresh is requested.
+From this question directory, the equivalent launcher is `python3 ../../run.py q2 --offline --seed 42`.
+Use root stages `--stage verify`, `--stage test`, `--stage approach1`, `--stage approach2`, or `--stage compare`.
+See [report](report.md), [session evidence](SESSION.md) and [root reproduction contract](../../AGENTS.md).
