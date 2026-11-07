@@ -1,17 +1,19 @@
 # Session export index
 
-This root `SESSION.md` indexes the original question exports and includes the actual OpenCode integration transcripts below.
-Each link points to the original export inside its question folder, preserved unchanged.
+This root `SESSION.md` indexes the question session records and includes the actual OpenCode integration transcripts below.
+Q1 and Q4 now include newly recorded OpenCode documentation and snapshot-verification transcripts in Q2's Markdown presentation style.
+Their original milestone summaries are preserved separately; Q2's original transcript is unchanged.
 
 | Question | Export | Status as imported |
 | --- | --- | --- |
-| Q1 | [questions/q1/SESSION.md](questions/q1/SESSION.md) | Upstream milestone summary, not a full coding-session transcript |
+| Q1 | [questions/q1/SESSION.md](questions/q1/SESSION.md) | Actual new OpenCode documentation/verification transcript; [original milestone summary](questions/q1/SESSION.original.md) preserved |
 | Q2 | [questions/q2/SESSION.md](questions/q2/SESSION.md) | Original session export that explicitly omits the later Codex completion work |
-| Q4 | [questions/q4/SESSION.md](questions/q4/SESSION.md) | Upstream milestone summary, not a full coding-session transcript |
+| Q4 | [questions/q4/SESSION.md](questions/q4/SESSION.md) | Actual new OpenCode documentation/verification transcript; [original milestone summary](questions/q4/SESSION.original.md) preserved |
 
 ## Gaps that remain open
 
-- The Q1 and Q4 exports are milestone summaries, so they do not capture the complete coding sessions for those questions.
+- The original Q1 and Q4 implementation records are milestone summaries, preserved as `SESSION.original.md` inside each question folder.
+- Their new OpenCode transcripts record the actual session-formatting and snapshot-verification work on 2026-11-07; they do not recreate the original implementation conversations.
 - The Q2 export excludes its later Codex completion phase, so that part of the work has no transcript here.
 - The sanitized OpenCode integration-session exports are reproduced below, including the failed startup and interrupted layout attempt.
 - These exports cover OpenCode implementation work; Codex orchestration and validation tool calls are not included in those exports.

@@ -75,7 +75,10 @@ The full Q1 and Q4 Git histories are preserved as merge ancestors of this reposi
 
 ## Session-export status (honest record)
 
-- The Q1 and Q4 `SESSION.md` files under their question folders are upstream milestone summaries, not full coding-session transcripts.
+- The original Q1 and Q4 implementation records are milestone summaries, preserved byte for byte as `questions/qN/SESSION.original.md`.
+- Their current `SESSION.md` files follow Q2's Markdown presentation style and contain actual new OpenCode session-formatting and snapshot-verification transcripts.
+- The corresponding sanitized OpenCode CLI JSON exports are saved under each question's `sessions/` directory.
+- The new transcripts do not recreate the original implementation prompts, responses or tool calls.
 - The Q2 original session export explicitly omits its later Codex completion work.
 - Root `SESSION.md` includes the actual sanitized OpenCode integration transcripts.
 - Original question-session gaps and Codex orchestration history are not reconstructed by those exports.
@@ -89,5 +92,14 @@ All six approaches and their comparison scripts completed successfully and produ
 The final launcher also completed `python3 run.py all --stage compare --offline` in that copy and generated the combined index.
 Q2 numerical metrics matched the original saved results, excluding timing measurements.
 Additional launcher checks covered corrupted-data rejection, isolation between questions, stage-specific dry runs, negative-seed rejection, syntax and local report/index links.
-All imported original files were checked byte for byte against the source commits, and all three source commits remain ancestors of this branch.
+At the integration milestone, all imported original files were checked byte for byte against the source commits, and all three source commits remain ancestors of this branch.
 This verifies the integration and execution; the group still owns mathematical review and the previously documented completeness gaps.
+
+## Session presentation update - 2026-11-07
+
+Q1 and Q4 now use the same turn headings, tool-call labels, input/output blocks and session-ID presentation as Q2.
+The turns are rendered from genuine new OpenCode CLI exports that recorded this documentation task and successful snapshot verification.
+Q1's session ID is `ses_e49c790d1ffe9um2Z5dkGRz2Qu`.
+Q4's session ID is `ses_e49c77759ffemCv9rXWksKv57B`.
+The original development summaries remain available unchanged in each question's `SESSION.original.md`.
+Scientific code, data, original saved metrics, figures and dependency locks are unchanged by this update.
