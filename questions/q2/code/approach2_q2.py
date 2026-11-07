@@ -3,6 +3,10 @@
 The three exotic payoffs use the same daily monitoring and strikes as Q2A.
 The hedge experiment uses a vanilla call so its benchmark is the exact
 Black-Scholes delta. Trading gains accrue to expiry as in the exam equation.
+
+Hedge training validates only on an independent validation stream: the
+S0-normalized validation CVaR selects the checkpoint and drives early
+stopping (patience/min-delta), and test paths are never used for either.
 """
 from __future__ import annotations
 
@@ -41,7 +45,9 @@ TRAIN_PATHS = 2**17
 VALIDATION_PATHS = 8192
 TEST_PATHS = 32768
 BATCH_SIZE = 4096
-EPOCHS = 5
+EPOCHS = 100
+PATIENCE = 10
+MIN_DELTA = 1e-5
 HIDDEN_WIDTH = 16
 LEARNING_RATE = 0.003
 REBALANCE_DAYS = (1, 5, 21)
@@ -134,14 +140,15 @@ def black_scholes_delta(features, rate, vol, maturity):
     return torch.special.ndtr(d1)
 
 
-def cvar(losses):
-    # Average the worst 5%, with a fractional weight at the empirical cutoff.
-    tail_count = losses.numel() * (1 - CVAR_ALPHA)
+def cvar(losses, alpha: float = CVAR_ALPHA):
+    # Average the worst (1 - alpha) fraction, with a fractional weight at the empirical cutoff.
+    tail_count = losses.numel() * (1 - alpha)
     worst = losses.topk(math.ceil(tail_count), sorted=True).values
     return (worst.sum() - (worst.numel() - tail_count) * worst[-1]) / tail_count
 
 
-def train_hedge(training, validation, growth, cost, model_seed, shuffle_seed):
+def train_hedge(training, validation, growth, cost, model_seed, shuffle_seed, epochs=EPOCHS, patience=PATIENCE, min_delta=MIN_DELTA):
+    """Train the deep hedge; validation is S0-normalized validation CVaR only."""
     torch.manual_seed(model_seed)
     model = HedgeNet()
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
@@ -152,8 +159,10 @@ def train_hedge(training, validation, growth, cost, model_seed, shuffle_seed):
     best_epoch = 0
     best_weights = None
     history = []
+    epochs_without_improvement = 0
+    stop_reason = "max_epochs_reached"
 
-    for epoch in range(1, EPOCHS + 1):
+    for epoch in range(1, epochs + 1):
         for indices in torch.randperm(len(payoff), generator=shuffle).split(BATCH_SIZE):
             optimizer.zero_grad(set_to_none=True)
             pnl = hedge_pnl(model(features[indices]), prices[indices], payoff[indices], growth, cost)
@@ -163,16 +172,44 @@ def train_hedge(training, validation, growth, cost, model_seed, shuffle_seed):
         with torch.no_grad():
             loss = float(cvar(-hedge_pnl(model(valid_features), valid_prices, valid_payoff, growth, cost)))
         history.append(loss)
-        if loss < best_loss:
+        if epoch == 1 or epoch % 10 == 0:
+            console.print(
+                f"    epoch {epoch}/{epochs}  validation CVaR/S0 {loss:.6f}  "
+                f"(best {best_loss:.6f} @ epoch {best_epoch})"
+            )
+        if loss < best_loss - min_delta:
             best_loss = loss
             best_epoch = epoch
             best_weights = {name: value.detach().clone() for name, value in model.state_dict().items()}
+            epochs_without_improvement = 0
+        else:
+            epochs_without_improvement += 1
+            if epochs_without_improvement >= patience:
+                stop_reason = (
+                    f"patience: {patience} epochs without a validation-CVaR "
+                    f"improvement greater than min_delta = {min_delta:g} (S0-normalized)"
+                )
+                break
+
+    console.print(
+        f"    stopped after {len(history)} trained epochs at epoch {epoch}; reason: {stop_reason}; "
+        f"best validation CVaR/S0 {best_loss:.6f} @ epoch {best_epoch}"
+    )
 
     if best_weights is None:
         raise ValueError("Hedge training produced no finite validation CVaR")
     model.load_state_dict(best_weights)
     model.eval()
-    return model, {"validation_cvar_per_s0": history, "best_epoch": best_epoch}
+    return model, {
+        "validation_cvar_per_s0": history,
+        "best_epoch": best_epoch,
+        "best_validation_cvar_per_s0": best_loss,
+        "epochs_run": len(history),
+        "epochs_max": epochs,
+        "patience": patience,
+        "min_delta": min_delta,
+        "stopping_reason": stop_reason,
+    }
 
 
 def pnl_stats(pnl, spot):
@@ -184,7 +221,7 @@ def pnl_stats(pnl, spot):
     }
 
 
-def run_hedges(name, spot, vol, rate, maturity, steps, seeds):
+def run_hedges(name, spot, vol, rate, maturity, steps, seeds, epochs=EPOCHS, patience=PATIENCE, min_delta=MIN_DELTA):
     paths = [
         gbm_paths(generator(seeds[split]), spot, vol, rate, maturity, steps, count)
         for split, count in (
@@ -206,7 +243,7 @@ def run_hedges(name, spot, vol, rate, maturity, steps, seeds):
             cost = bps * 1e-4
             started = time.perf_counter()
             model, history = train_hedge(
-                training, validation, growth, cost, seeds["training"], seeds["training"] + 1
+                training, validation, growth, cost, seeds["training"], seeds["training"] + 1, epochs, patience, min_delta
             )
             with torch.no_grad():
                 positions = torch.cat([model(batch) for batch in test_features.split(BATCH_SIZE)])
@@ -266,14 +303,29 @@ def save_results(name, payload):
     console.print(f"Saved {folder.relative_to(REPO_ROOT)}/metrics.json and figures.html")
 
 
-def main(argv=None):
+def _parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--valuation-date", type=date.fromisoformat, default=date(2025, 12, 31))
     parser.add_argument("--maturity-years", type=float, default=1.0)
+    parser.add_argument("--epochs", type=int, default=EPOCHS, help="maximum training epochs at most 100")
+    parser.add_argument("--patience", type=int, default=PATIENCE, help="early-stopping patience in epochs")
+    parser.add_argument("--min-delta", type=float, default=MIN_DELTA, dest="min_delta",
+                        help="minimum S0-normalized validation-CVaR improvement to reset patience")
     args = parser.parse_args(argv)
     if args.seed < 0 or not math.isfinite(args.maturity_years) or args.maturity_years <= 0:
         parser.error("Provide a nonnegative seed and a positive finite maturity.")
+    if not 1 <= args.epochs <= 100:
+        parser.error("--epochs must be between 1 and 100 (maximum 100).")
+    if args.patience < 1:
+        parser.error("--patience must be at least 1.")
+    if not math.isfinite(args.min_delta) or args.min_delta < 0:
+        parser.error("--min-delta must be a nonnegative finite number.")
+    return args
+
+
+def main(argv=None):
+    args = _parse_args(argv)
     torch.set_num_threads(2)
     maturity = args.maturity_years
     steps = math.ceil(STEPS_PER_YEAR * maturity)
@@ -300,7 +352,9 @@ def main(argv=None):
                 raise ValueError(f"{name.upper()} PyTorch European price outside the three-SE band")
 
             started = time.perf_counter()
-            cases, histories = run_hedges(name, spot, vol, rate, maturity, steps, seeds)
+            cases, histories = run_hedges(
+                name, spot, vol, rate, maturity, steps, seeds, args.epochs, args.patience, args.min_delta
+            )
             seconds = time.perf_counter() - started
             print_results(name, prices, cases)
             save_results(name, {
@@ -317,7 +371,9 @@ def main(argv=None):
                     "discount_rate": rate, "shibor_fixing_date": curve["fixing_date"].isoformat(),
                     "pricing_paths": MC_PATHS, "train_paths": TRAIN_PATHS,
                     "validation_paths": VALIDATION_PATHS, "test_paths": TEST_PATHS,
-                    "epochs": EPOCHS, "batch_size": BATCH_SIZE, "learning_rate": LEARNING_RATE,
+                    "epochs": args.epochs, "patience": args.patience, "min_delta": args.min_delta,
+                    "validation_selection": "S0-normalized validation CVaR on independent validation paths; test paths never used for checkpoint selection or stopping",
+                    "batch_size": BATCH_SIZE, "learning_rate": LEARNING_RATE,
                     "hidden_width": HIDDEN_WIDTH, "cvar_alpha": CVAR_ALPHA,
                     "rebalance_days": REBALANCE_DAYS, "cost_bps": COST_BPS,
                     "hedged_payoff": "at-the-money European call",

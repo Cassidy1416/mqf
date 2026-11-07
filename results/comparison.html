@@ -1,23 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>AP26 integration index (q1, q2, q4)</title>
-<style>
-body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 60rem; padding: 0 1rem; }
-.card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
-.card.hit { border-left: 6px solid #2a7; }
-.card.miss { border-left: 6px solid #b96; color: #555; }
-h1 { font-size: 1.4rem; }
-a { color: #05c; }
-</style>
-</head>
-<body>
-<h1>Advanced Programming project: cross-question index</h1>
-<p>This page only links saved per-question comparisons. Results are never ranked across
-questions because the metrics of q1, q2 and q4 are not comparable with each other.</p>
-<div class='card hit'><h2><a href='../questions/q1/results/comparison.html'>q1 saved comparison</a></h2><p>Saved output from the question's own run; metrics are compared only inside each question.</p><p>2 saved metrics files: approach1/market/metrics.json, approach2/differentiable/metrics.json</p></div>
-<div class='card hit'><h2><a href='../questions/q2/results/comparison.html'>q2 saved comparison</a></h2><p>Saved output from the question's own run; metrics are compared only inside each question.</p><p>4 saved metrics files: approach1/cu0/metrics.json, approach1/if0/metrics.json, approach2/cu0/metrics.json, approach2/if0/metrics.json</p></div>
-<div class='card hit'><h2><a href='../questions/q4/results/comparison.html'>q4 saved comparison</a></h2><p>Saved output from the question's own run; metrics are compared only inside each question.</p><p>2 saved metrics files: approach1/trade/metrics.json, approach2/trade/metrics.json</p></div>
-</body>
-</html>
+<!doctype html><html lang="en"><meta charset="utf-8"><title>MQF comparisons</title><style>body{font:16px system-ui;max-width:1100px;margin:40px auto;padding:0 20px}table{border-collapse:collapse}th,td{border:1px solid #ccc;padding:8px 16px;text-align:left}</style><body><h1>Q1, Q2 and Q4 experiment comparisons</h1><p>Rankings apply only within each named task and evaluation set. Scientific HTML figures are linked below.</p>
+<p><a href="../questions/q1/results/comparison.html">Q1 detailed figures and comparisons</a></p>
+<p><a href="../questions/q2/results/comparison.html">Q2 detailed figures and comparisons</a></p>
+<p><a href="../questions/q4/results/comparison.html">Q4 detailed figures and comparisons</a></p>
+<h2>Q1 identical held-out quotes: price-relative median error (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>SVI refit</td><td>0.0469954</td></tr>
+<tr><td>2</td><td>Neural surface</td><td>0.0859616</td></tr>
+</table>
+<h2>Q2 cu0 h1_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>Black-Scholes</td><td>8074.83</td></tr>
+<tr><td>2</td><td>learned</td><td>8191.87</td></tr>
+</table>
+<h2>Q2 cu0 h1_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>8731.31</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>8742.25</td></tr>
+</table>
+<h2>Q2 cu0 h1_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>10638</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>12022.6</td></tr>
+</table>
+<h2>Q2 cu0 h5_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>8957.1</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>9013.55</td></tr>
+</table>
+<h2>Q2 cu0 h5_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>9230.16</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>9371.98</td></tr>
+</table>
+<h2>Q2 cu0 h5_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>10275.3</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>10911.7</td></tr>
+</table>
+<h2>Q2 cu0 h21_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>10694.1</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>11005.2</td></tr>
+</table>
+<h2>Q2 cu0 h21_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>10852.9</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>11206.5</td></tr>
+</table>
+<h2>Q2 cu0 h21_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>11474.3</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>12024.2</td></tr>
+</table>
+<h2>Q2 if0 h1_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>Black-Scholes</td><td>427.176</td></tr>
+<tr><td>2</td><td>learned</td><td>434.446</td></tr>
+</table>
+<h2>Q2 if0 h1_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>Black-Scholes</td><td>458.982</td></tr>
+<tr><td>2</td><td>learned</td><td>459.813</td></tr>
+</table>
+<h2>Q2 if0 h1_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>549.989</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>611.743</td></tr>
+</table>
+<h2>Q2 if0 h5_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>475.197</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>478.153</td></tr>
+</table>
+<h2>Q2 if0 h5_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>488.07</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>495.126</td></tr>
+</table>
+<h2>Q2 if0 h5_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>537.305</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>567.134</td></tr>
+</table>
+<h2>Q2 if0 h21_c0: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>567.963</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>584.74</td></tr>
+</table>
+<h2>Q2 if0 h21_c10: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>575.442</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>594.195</td></tr>
+</table>
+<h2>Q2 if0 h21_c50: CVaR95 (lower is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>learned</td><td>604.826</td></tr>
+<tr><td>2</td><td>Black-Scholes</td><td>632.538</td></tr>
+</table>
+<h2>Q4 trade: final test AUC (higher is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>adamic_adar</td><td>0.715</td></tr>
+<tr><td>2</td><td>common_neighbors</td><td>0.69</td></tr>
+<tr><td>3</td><td>preferential_attachment</td><td>0.68</td></tr>
+<tr><td>4</td><td>learned</td><td>0.57</td></tr>
+</table>
+<h2>Q4 trade_future: final test AUC (higher is better)</h2><table><tr><th>Rank</th><th>Method</th><th>Value</th></tr>
+<tr><td>1</td><td>adamic_adar</td><td>0.5</td></tr>
+<tr><td>2</td><td>preferential_attachment</td><td>0.5</td></tr>
+<tr><td>3</td><td>common_neighbors</td><td>0.375</td></tr>
+<tr><td>4</td><td>learned</td><td>0</td></tr>
+</table>
+<h2>Metrics inventory</h2><ul><li>questions/q1/results/approach1/market/metrics.json</li><li>questions/q1/results/approach2/differentiable/metrics.json</li><li>questions/q2/results/approach1/cu0/metrics.json</li><li>questions/q2/results/approach1/if0/metrics.json</li><li>questions/q2/results/approach2/cu0/metrics.json</li><li>questions/q2/results/approach2/if0/metrics.json</li><li>questions/q4/results/approach1/trade/metrics.json</li><li>questions/q4/results/approach2/trade/metrics.json</li><li>questions/q4/results/approach2/trade_future/metrics.json</li></ul></body></html>

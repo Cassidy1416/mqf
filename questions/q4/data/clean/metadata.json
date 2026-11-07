@@ -21,11 +21,70 @@
   "artifacts": {
     "data/clean/trade_flows.csv": {
       "sha256": "3f89cf39a5fcef53c5fffaaee016e70ff47f1ac29ea177a99792b1cee6f3e420",
-      "bytes": 250403
+      "bytes": 250403,
+      "rows": 4160,
+      "schema": {
+        "year": "int64",
+        "reporter_code": "int64",
+        "partner_code": "int64",
+        "trade_value_usd": "float64",
+        "flow": "string",
+        "source": "string"
+      },
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "unique_key": [
+        "year",
+        "reporter_code",
+        "partner_code"
+      ],
+      "units": "USD annual exports"
     },
     "data/clean/node_metadata.csv": {
       "sha256": "b2a7a3aca589ef8f2c9cc85667ac66734d55711be85ac92b8cd6a2e044a96e13",
-      "bytes": 609
+      "bytes": 609,
+      "rows": 21,
+      "schema": {
+        "node_code": "int64",
+        "node_name": "string",
+        "region": "string",
+        "is_china": "int64"
+      },
+      "unique_key": [
+        "node_code"
+      ],
+      "units": "UN country code and geographical proxy labels"
     }
+  },
+  "query": {
+    "endpoint": "https://comtradeapi.un.org/public/v1/preview/C/A/HS",
+    "periods": [
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "cmdCode": "TOTAL",
+    "flowCode": "X",
+    "partner2Code": 0,
+    "customsCode": "C00",
+    "reporter_universe": "China plus its 20 anchor-year top import/export partners",
+    "partnerCode": "same fixed induced node set"
   }
 }

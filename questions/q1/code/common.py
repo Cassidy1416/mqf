@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -11,6 +12,27 @@ from scipy.stats import norm
 
 
 ROOT = Path(__file__).resolve().parents[1]
+TENOR_YEARS = {"rate_on": 1/365, "rate_1w": 7/365, "rate_2w": 14/365, "rate_1m": 1/12,
+               "rate_3m": .25, "rate_6m": .5, "rate_9m": .75, "rate_1y": 1.0}
+
+
+def zero_curve_rate(quotes, maturities, target):
+    """Interpolate continuous zero rates converted from simple annual quotes."""
+    quotes, maturities = np.asarray(quotes, float), np.asarray(maturities, float)
+    if not np.all(np.isfinite(quotes)) or np.any(1 + quotes * maturities <= 0):
+        raise ValueError("Invalid SHIBOR curve")
+    if target < maturities[0] or target > maturities[-1]:
+        raise ValueError("Option maturity is outside the SHIBOR curve; extrapolation is disabled")
+    return float(np.interp(target, maturities, np.log1p(quotes * maturities) / maturities))
+
+
+def interpolate_total_variance(maturities, variances, target):
+    maturities, variances = np.asarray(maturities, float), np.asarray(variances, float)
+    if len(maturities) < 2 or np.any(np.diff(maturities) <= 0):
+        raise ValueError("Interpolation needs at least two increasing maturities")
+    if target < maturities[0] or target > maturities[-1]:
+        raise ValueError("Term-structure extrapolation is disabled")
+    return float(np.interp(target, maturities, variances))
 
 
 def set_seed(seed: int) -> np.random.Generator:
@@ -20,20 +42,29 @@ def set_seed(seed: int) -> np.random.Generator:
 
 def load_market_data(data_dir: Path | None = None) -> pd.DataFrame:
     data_dir = data_dir or ROOT / "data" / "clean"
+    sys.path.insert(0, str(ROOT.parents[1]))
+    from snapshot_io import verify_manifest
+    verify_manifest(data_dir.parents[1], data_dir / "metadata.json")
     options = pd.read_csv(data_dir / "option_quotes.csv", parse_dates=["date", "expiry"])
-    underlying = pd.read_csv(data_dir / "underlying.csv", parse_dates=["date"]).rename(columns={"close": "spot"})
-    rates = pd.read_csv(data_dir / "rates.csv", parse_dates=["date"])
+    underlying = pd.read_csv(data_dir / "underlying.csv", parse_dates=["date"]).rename(columns={"close": "spot", "date": "spot_date"})
+    rates = pd.read_csv(data_dir / "rates.csv", parse_dates=["date"]).rename(columns={"date": "fixing_date"})
     options = options.sort_values("date")
-    underlying = underlying.sort_values("date")
-    rates = rates.sort_values("date")
-    frame = pd.merge_asof(options, underlying, on="date", direction="backward")
-    frame = pd.merge_asof(frame.sort_values("date"), rates, on="date", direction="backward")
-    frame["rate"] = frame["shibor_3m_percent"].fillna(frame["shibor_3m_percent"].median()) / 100.0
+    frame = pd.merge_asof(options, underlying.sort_values("spot_date"), left_on="date", right_on="spot_date", direction="backward")
+    frame = pd.merge_asof(frame.sort_values("date"), rates.sort_values("fixing_date"), left_on="date", right_on="fixing_date", direction="backward")
+    if frame[["spot_date", "fixing_date", *TENOR_YEARS]].isna().any().any():
+        raise ValueError("An option quote lacks a contemporaneous spot or complete eight-tenor SHIBOR curve")
+    if ((frame["date"] - frame["fixing_date"]).dt.days > 10).any():
+        raise ValueError("A SHIBOR fixing is more than ten calendar days stale")
     frame["tau"] = (frame["expiry"] - frame["date"]).dt.days / 365.25
+    frame["rate"] = [zero_curve_rate(values, list(TENOR_YEARS.values()), max(tau, 1/365))
+                     for values, tau in zip(frame[list(TENOR_YEARS)].to_numpy(), frame["tau"])]
     frame["forward"] = frame["spot"] * np.exp(frame["rate"] * frame["tau"])
     frame["discount"] = np.exp(-frame["rate"] * frame["tau"])
     frame["log_moneyness"] = np.log(frame["strike"] / frame["forward"])
     frame["relative_volume"] = frame["volume"].fillna(0)
+    frame["quote_id"] = frame.apply(lambda r: f"{r['date'].date()}|{r['expiry'].date()}|{r['strike']:g}|{r['option_type']}", axis=1)
+    if frame["quote_id"].duplicated().any():
+        raise ValueError("Duplicate option quote IDs")
     return frame
 
 
@@ -93,7 +124,7 @@ def parity_residuals(frame: pd.DataFrame) -> pd.DataFrame:
     enriched = frame[["date", "expiry", "strike", "spot", "rate", "tau"]].drop_duplicates(["date", "expiry", "strike"])
     result = pivot.merge(enriched, on=["date", "expiry", "strike"], how="left")
     result["parity_residual"] = result["call"] - result["put"] - (result["spot"] - result["strike"] * np.exp(-result["rate"] * result["tau"]))
-    return result
+    return result.dropna(subset=["call", "put"])
 
 
 def svi_value(k, parameters):
@@ -112,21 +143,41 @@ def butterfly_g(k, parameters):
     return (1 - k * slope / (2 * variance)) ** 2 - slope**2 / 4 * (1 / variance + 0.25)
 
 
+def svi_initial(k: np.ndarray, total_variance: np.ndarray) -> np.ndarray:
+    return np.array([max(float(np.percentile(total_variance, 10)), 1e-5), 0.2, 0.0, float(np.median(k)), 0.1])
+
+
+def scipy_svi(k: np.ndarray, total_variance: np.ndarray, initial: np.ndarray) -> tuple:
+    lower = np.array([0.0, 0.0, -0.999, -3.0, 1e-4])
+    upper = np.array([5.0, 10.0, 0.999, 3.0, 5.0])
+    history = []
+
+    def residual(parameters):
+        values = svi_value(k, parameters) - total_variance
+        history.append(float(np.mean(values**2)))
+        return values
+
+    fit = least_squares(residual, initial, bounds=(lower, upper), max_nfev=3000, xtol=1e-12, ftol=1e-12, gtol=1e-12)
+    return fit, lower, upper, history
+
+
 def fit_svi(k: np.ndarray, total_variance: np.ndarray, butterfly_penalty: float = 0.0) -> dict:
     k = np.asarray(k, dtype=float)
     total_variance = np.asarray(total_variance, dtype=float)
-    initial = np.array([max(float(np.percentile(total_variance, 10)), 1e-5), 0.2, 0.0, float(np.median(k)), 0.1])
-    lower = np.array([0.0, 0.0, -0.999, -3.0, 1e-4])
-    upper = np.array([5.0, 10.0, 0.999, 3.0, 5.0])
+    initial = svi_initial(k, total_variance)
     started = time.perf_counter()
     penalty_grid = np.linspace(-0.4, 0.4, 81)
+
     def objective(parameters):
         return float(np.mean((svi_value(k, parameters) - total_variance) ** 2))
-    unconstrained = least_squares(lambda parameters: svi_value(k, parameters) - total_variance, initial, bounds=(lower, upper), max_nfev=3000, xtol=1e-12, ftol=1e-12, gtol=1e-12)
+
+    unconstrained, lower, upper, _ = scipy_svi(k, total_variance, initial)
     constrained = minimize(objective, unconstrained.x, method="SLSQP", bounds=list(zip(lower, upper)), constraints={"type": "ineq", "fun": lambda parameters: butterfly_g(penalty_grid, parameters)}, options={"maxiter": 1000, "ftol": 1e-12})
     result_parameters = constrained.x if constrained.success else unconstrained.x
     return {
         "parameters": result_parameters,
+        "initial_parameters": initial,
+        "solver": "bounded scipy least_squares followed by SLSQP butterfly constraints",
         "objective": objective(result_parameters),
         "iterations": int(getattr(constrained, "nit", unconstrained.nfev)),
         "success": bool(constrained.success),

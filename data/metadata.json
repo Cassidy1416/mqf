@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "questions": {
+    "q1": {
+      "manifest": "questions/q1/data/clean/metadata.json",
+      "sha256": "371167f7180d8a316ffca0dfa85d45cb5560692d70c85961303dfb2e6cbc537b",
+      "source": {
+        "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
+        "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
+        "rates": "AKShare macro_china_shibor_all through the SHA-256 verified original Q2 raw snapshot, Jin10 Data Center"
+      }
+    },
+    "q2": {
+      "manifest": "questions/q2/data/metadata.json",
+      "sha256": "1b3abe6f381a1b062abc0e8273165eae53edb72ce340c319c0ae637775c8ed69",
+      "source": {
+        "if0": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "futures_main_sina",
+          "parameters": {
+            "symbol": "IF0",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+        },
+        "cu0": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "futures_main_sina",
+          "parameters": {
+            "symbol": "CU0",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+        },
+        "csi300": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "index_zh_a_hist",
+          "parameters": {
+            "symbol": "000300",
+            "period": "daily",
+            "start_date": "20200101",
+            "end_date": "20251231"
+          },
+          "documentation": "https://akshare.akfamily.xyz/data/index/index.html"
+        },
+        "shibor": {
+          "package": "akshare",
+          "version": "1.20.31",
+          "function": "macro_china_shibor_all",
+          "parameters": {},
+          "documentation": "https://akshare.akfamily.xyz/data/macro/macro_china.html"
+        }
+      }
+    },
+    "q4": {
+      "manifest": "questions/q4/data/clean/metadata.json",
+      "sha256": "cdd9f07e76733d3c38ca7eac42623f3c6697d8a93b33e19a9c39980ec9658325",
+      "source": "https://comtradeapi.un.org/public/v1/preview/C/A/HS"
+    }
+  },
+  "artifacts": {
+    "questions/q1/data/clean/option_quotes.csv": {
+      "sha256": "15bca836d4757297f8c593356eda3f1c26e42df9387117d3c95a11106ef69c6a",
+      "bytes": 370844,
+      "rows": 5898,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "contract_base": "string",
+        "contract_symbol": "string",
+        "option_type": "string",
+        "strike": "float64",
+        "expiry": "date (YYYY-MM-DD)",
+        "close": "float64",
+        "volume": "float64"
+      },
+      "first_date": "2023-03-20",
+      "last_date": "2026-01-13",
+      "units": "index points for prices; contracts for volume",
+      "unique_key": [
+        "date",
+        "expiry",
+        "strike",
+        "option_type"
+      ],
+      "question": "q1",
+      "source": {
+        "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
+        "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
+        "rates": "AKShare macro_china_shibor_all through the SHA-256 verified original Q2 raw snapshot, Jin10 Data Center"
+      },
+      "retrieval_date": "2026-11-05T23:11:44.028861+08:00"
+    },
+    "questions/q1/data/clean/underlying.csv": {
+      "sha256": "ca291bbcdea8837bfebd64ac1f241765d3ca980937128aa27196f1cfbdf642dd",
+      "bytes": 13648,
+      "rows": 685,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "close": "float64"
+      },
+      "first_date": "2023-03-20",
+      "last_date": "2026-01-13",
+      "units": "index points for prices; contracts for volume",
+      "unique_key": [
+        "date"
+      ],
+      "question": "q1",
+      "source": {
+        "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
+        "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
+        "rates": "AKShare macro_china_shibor_all through the SHA-256 verified original Q2 raw snapshot, Jin10 Data Center"
+      },
+      "retrieval_date": "2026-11-05T23:11:44.028861+08:00"
+    },
+    "questions/q1/data/clean/rates.csv": {
+      "sha256": "aed07f25c24ea59830704cb36b3f9f92f3f9b7140de076aef2bb38b24b2321fc",
+      "bytes": 52120,
+      "rows": 706,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "rate_on": "float64",
+        "rate_1w": "float64",
+        "rate_2w": "float64",
+        "rate_1m": "float64",
+        "rate_3m": "float64",
+        "rate_6m": "float64",
+        "rate_9m": "float64",
+        "rate_1y": "float64"
+      },
+      "first_date": "2023-03-17",
+      "last_date": "2026-01-13",
+      "units": "decimal annual simple rate",
+      "unique_key": [
+        "date"
+      ],
+      "question": "q1",
+      "source": {
+        "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
+        "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
+        "rates": "AKShare macro_china_shibor_all through the SHA-256 verified original Q2 raw snapshot, Jin10 Data Center"
+      },
+      "retrieval_date": "2026-11-05T23:11:44.028861+08:00"
+    },
+    "questions/q2/data/clean/q2/if0.csv": {
+      "sha256": "52639746f7fc927939306195a39c736bafd73c09a24afd649311e75c8db551b6",
+      "rows": 1455,
+      "first_date": "2020-01-02",
+      "last_date": "2025-12-31",
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "open": "float64",
+        "high": "float64",
+        "low": "float64",
+        "close": "float64",
+        "volume": "int64",
+        "open_interest": "int64"
+      },
+      "source": {
+        "package": "akshare",
+        "version": "1.20.31",
+        "function": "futures_main_sina",
+        "parameters": {
+          "symbol": "IF0",
+          "start_date": "20200101",
+          "end_date": "20251231"
+        },
+        "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+      },
+      "retrieval_date": "2026-11-06",
+      "units": "index points",
+      "bytes": 75077,
+      "question": "q2",
+      "unique_key": [
+        "date"
+      ]
+    },
+    "questions/q2/data/clean/q2/cu0.csv": {
+      "sha256": "eb36e12102fe8d2a9a94e61dd2118a4af31aee720994d28b352d3c851da64909",
+      "rows": 1455,
+      "first_date": "2020-01-02",
+      "last_date": "2025-12-31",
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "open": "float64",
+        "high": "float64",
+        "low": "float64",
+        "close": "float64",
+        "volume": "int64",
+        "open_interest": "int64"
+      },
+      "source": {
+        "package": "akshare",
+        "version": "1.20.31",
+        "function": "futures_main_sina",
+        "parameters": {
+          "symbol": "CU0",
+          "start_date": "20200101",
+          "end_date": "20251231"
+        },
+        "documentation": "https://akshare.akfamily.xyz/data/futures/futures.html"
+      },
+      "retrieval_date": "2026-11-06",
+      "units": "CNY per metric tonne",
+      "bytes": 82130,
+      "question": "q2",
+      "unique_key": [
+        "date"
+      ]
+    },
+    "questions/q2/data/clean/q2/csi300.csv": {
+      "sha256": "3a34ca74d3293367ab9dc36f88c146b671b71aeaca882fb2677d0cd7578c554d",
+      "rows": 1455,
+      "first_date": "2020-01-02",
+      "last_date": "2025-12-31",
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "open": "float64",
+        "high": "float64",
+        "low": "float64",
+        "close": "float64",
+        "volume": "int64",
+        "turnover": "float64"
+      },
+      "source": {
+        "package": "akshare",
+        "version": "1.20.31",
+        "function": "index_zh_a_hist",
+        "parameters": {
+          "symbol": "000300",
+          "period": "daily",
+          "start_date": "20200101",
+          "end_date": "20251231"
+        },
+        "documentation": "https://akshare.akfamily.xyz/data/index/index.html"
+      },
+      "retrieval_date": "2026-11-06",
+      "units": "index points",
+      "bytes": 98209,
+      "question": "q2",
+      "unique_key": [
+        "date"
+      ]
+    },
+    "questions/q2/data/clean/q2/shibor.csv": {
+      "sha256": "a4716b4c9c3f39d9483bd713ebd67aee956d577000911dae7adee4b49bfb5564",
+      "rows": 1493,
+      "first_date": "2020-01-02",
+      "last_date": "2025-12-31",
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "rate_on": "float64",
+        "rate_1w": "float64",
+        "rate_2w": "float64",
+        "rate_1m": "float64",
+        "rate_3m": "float64",
+        "rate_6m": "float64",
+        "rate_9m": "float64",
+        "rate_1y": "float64"
+      },
+      "source": {
+        "package": "akshare",
+        "version": "1.20.31",
+        "function": "macro_china_shibor_all",
+        "parameters": {},
+        "documentation": "https://akshare.akfamily.xyz/data/macro/macro_china.html"
+      },
+      "retrieval_date": "2026-11-06",
+      "units": "decimal annual rate",
+      "bytes": 110174,
+      "question": "q2",
+      "unique_key": [
+        "date"
+      ]
+    },
+    "questions/q4/data/clean/trade_flows.csv": {
+      "sha256": "3f89cf39a5fcef53c5fffaaee016e70ff47f1ac29ea177a99792b1cee6f3e420",
+      "bytes": 250403,
+      "rows": 4160,
+      "schema": {
+        "year": "int64",
+        "reporter_code": "int64",
+        "partner_code": "int64",
+        "trade_value_usd": "float64",
+        "flow": "string",
+        "source": "string"
+      },
+      "years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023
+      ],
+      "unique_key": [
+        "year",
+        "reporter_code",
+        "partner_code"
+      ],
+      "units": "USD annual exports",
+      "question": "q4",
+      "source": "https://comtradeapi.un.org/public/v1/preview/C/A/HS",
+      "retrieval_date": "2026-11-05T14:17:13.904067+00:00"
+    },
+    "questions/q4/data/clean/node_metadata.csv": {
+      "sha256": "b2a7a3aca589ef8f2c9cc85667ac66734d55711be85ac92b8cd6a2e044a96e13",
+      "bytes": 609,
+      "rows": 21,
+      "schema": {
+        "node_code": "int64",
+        "node_name": "string",
+        "region": "string",
+        "is_china": "int64"
+      },
+      "unique_key": [
+        "node_code"
+      ],
+      "units": "UN country code and geographical proxy labels",
+      "question": "q4",
+      "source": "https://comtradeapi.un.org/public/v1/preview/C/A/HS",
+      "retrieval_date": "2026-11-05T14:17:13.904067+00:00"
+    }
+  }
+}

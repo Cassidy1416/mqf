@@ -1,0 +1,48 @@
+{
+  "source": {
+    "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
+    "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
+    "rates": "ak.macro_china_shibor_all"
+  },
+  "retrieved_at": "2026-11-05T23:11:44.028861+08:00",
+  "contracts": [
+    "io2310",
+    "io2311",
+    "io2312",
+    "io2401",
+    "io2403",
+    "io2511",
+    "io2512",
+    "io2601",
+    "io2602"
+  ],
+  "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, plus a shared 2023-10-23 through 2023-10-27 calendar block for four overlapping expiries when available; thirteen evenly spaced strikes and both call and put daily closes.",
+  "calendar_block": [
+    "2023-10-23",
+    "2023-10-24",
+    "2023-10-25",
+    "2023-10-26",
+    "2023-10-27"
+  ],
+  "date_range": [
+    "2023-03-20",
+    "2026-01-13"
+  ],
+  "expiry_count": 9,
+  "sample_date_count": 177,
+  "quote_rows": 1134,
+  "artifacts": {
+    "data/clean/option_quotes.csv": {
+      "sha256": "71a161ccddb93e61b6a988c2314f064f61dd3ba028304e1b5d749b7181a4b2a4",
+      "bytes": 69034
+    },
+    "data/clean/underlying.csv": {
+      "sha256": "ca291bbcdea8837bfebd64ac1f241765d3ca980937128aa27196f1cfbdf642dd",
+      "bytes": 13648
+    },
+    "data/clean/rates.csv": {
+      "sha256": "1d4a2f258ba64a496d2570d80d8aaf359a8015faac99ab9ee04686f340a3247a",
+      "bytes": 11845
+    }
+  }
+}

@@ -4,7 +4,13 @@
     "q1": {
       "source_url": "git@github.com:micheal021/ap26-q1-vol-surface.git",
       "commit": "58fbb2d33e7f53dd6948a1ae636621c265e7f8c7",
-      "path": "questions/q1"
+      "path": "questions/q1",
+      "compliance_revision": {
+        "commit": "cbcaaa87bd829be5b8d0ea09d4290e4f272df8b3",
+        "ref": "assignment-compliance",
+        "imported_artifact": "data/clean/option_quotes.csv",
+        "note": "Selected reference code and expanded quotes imported during the approved repair; original snapshot retained in archive."
+      }
     },
     "q2": {
       "source_url": "git@github.com:Cassidy1416/mqf-q2.git",

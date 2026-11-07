@@ -2,7 +2,7 @@
   "source": {
     "options": "ak.option_cffex_hs300_spot_sina + ak.option_cffex_hs300_daily_sina",
     "underlying": "ak.stock_zh_index_daily(symbol='sh000300')",
-    "rates": "ak.macro_china_shibor_all"
+    "rates": "AKShare macro_china_shibor_all through the SHA-256 verified original Q2 raw snapshot, Jin10 Data Center"
   },
   "retrieved_at": "2026-11-05T23:11:44.028861+08:00",
   "contracts": [
@@ -16,33 +16,354 @@
     "io2601",
     "io2602"
   ],
-  "sample_rule": "First five trading dates within 31 calendar days of each selected contract's first observation, plus a shared 2023-10-23 through 2023-10-27 calendar block for four overlapping expiries when available; thirteen evenly spaced strikes and both call and put daily closes.",
-  "calendar_block": [
-    "2023-10-23",
-    "2023-10-24",
-    "2023-10-25",
-    "2023-10-26",
-    "2023-10-27"
-  ],
+  "sample_rule": "Use the exchange daily chains in the shared calendar month and the original Sina samples outside the block.",
+  "calendar_block": {
+    "2023-10-23": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-24": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-25": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-26": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-27": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-30": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-10-31": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-01": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-02": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-03": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-06": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-07": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-08": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-09": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-10": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-13": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-14": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-15": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-16": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-17": [
+      "2023-11-17",
+      "2023-12-15",
+      "2024-01-19",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-20": [
+      "2023-12-15",
+      "2024-01-19",
+      "2024-02-16",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-21": [
+      "2023-12-15",
+      "2024-01-19",
+      "2024-02-16",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ],
+    "2023-11-22": [
+      "2023-12-15",
+      "2024-01-19",
+      "2024-02-16",
+      "2024-03-15",
+      "2024-06-21",
+      "2024-09-20"
+    ]
+  },
   "date_range": [
     "2023-03-20",
     "2026-01-13"
   ],
-  "expiry_count": 9,
-  "sample_date_count": 177,
-  "quote_rows": 1134,
+  "expiry_count": 12,
+  "sample_date_count": 178,
+  "quote_rows": 5898,
+  "rate_snapshot_provenance": {
+    "source_path": "data/sources/shibor_akshare_2026-11-06.csv",
+    "source_sha256": "aef53e0128fa09580fd1f339febad44eac0652a26c89cf48926399d9beb7ad76",
+    "retrieval_date": "2026-11-06",
+    "access": {
+      "package": "akshare",
+      "version": "1.20.31",
+      "function": "macro_china_shibor_all",
+      "parameters": {},
+      "documentation": "https://akshare.akfamily.xyz/data/macro/macro_china.html"
+    },
+    "original_q2_manifest": "../q2/data/metadata.json",
+    "transformation": "Select fixings through the last option date, include the preceding fixing, retain all eight tenors and divide percentage quotes by 100; do not fill non-fixing dates."
+  },
+  "common_expiries": [
+    "2023-12-15",
+    "2024-01-19",
+    "2024-03-15",
+    "2024-06-21",
+    "2024-09-20"
+  ],
+  "calendar_sources": {
+    "2023-10-23": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/23/index.xml",
+    "2023-10-24": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/24/index.xml",
+    "2023-10-25": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/25/index.xml",
+    "2023-10-26": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/26/index.xml",
+    "2023-10-27": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/27/index.xml",
+    "2023-10-30": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/30/index.xml",
+    "2023-10-31": "http://www.cffex.com.cn/sj/hqsj/rtj/202310/31/index.xml",
+    "2023-11-01": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/01/index.xml",
+    "2023-11-02": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/02/index.xml",
+    "2023-11-03": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/03/index.xml",
+    "2023-11-06": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/06/index.xml",
+    "2023-11-07": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/07/index.xml",
+    "2023-11-08": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/08/index.xml",
+    "2023-11-09": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/09/index.xml",
+    "2023-11-10": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/10/index.xml",
+    "2023-11-13": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/13/index.xml",
+    "2023-11-14": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/14/index.xml",
+    "2023-11-15": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/15/index.xml",
+    "2023-11-16": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/16/index.xml",
+    "2023-11-17": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/17/index.xml",
+    "2023-11-20": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/20/index.xml",
+    "2023-11-21": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/21/index.xml",
+    "2023-11-22": "http://www.cffex.com.cn/sj/hqsj/rtj/202311/22/index.xml"
+  },
+  "calendar_range": [
+    "2023-10-23",
+    "2023-11-23"
+  ],
+  "calendar_retrieved_at": "2026-11-07T00:21:04.353945+08:00",
+  "calendar_source": "CFFEX public daily XML closing prices and volumes",
+  "upstream_artifact_claims": {
+    "data/clean/option_quotes.csv": {
+      "sha256": "15bca836d4757297f8c593356eda3f1c26e42df9387117d3c95a11106ef69c6a",
+      "bytes": 370844
+    },
+    "data/clean/underlying.csv": {
+      "sha256": "193c1e2d259a36abeef407cbb41f55c0e94a8f3f88f3a3bfcdcd9c78961e14ef",
+      "bytes": 14334
+    },
+    "data/clean/rates.csv": {
+      "sha256": "fcd62b6991e8b45d3569fb8158087347b7e5bdb54d754dae3b493628625233d1",
+      "bytes": 68120
+    }
+  },
+  "shibor_tenors_years": {
+    "rate_on": 0.0027397260273972603,
+    "rate_1w": 0.019178082191780823,
+    "rate_2w": 0.038356164383561646,
+    "rate_1m": 0.08333333333333333,
+    "rate_3m": 0.25,
+    "rate_6m": 0.5,
+    "rate_9m": 0.75,
+    "rate_1y": 1.0
+  },
+  "curve_quote_convention": "Simple annual decimal quotes; convert each tenor to a continuously compounded zero rate before interpolation.",
+  "import_provenance": {
+    "repository": "git@github.com:micheal021/ap26-q1-vol-surface.git",
+    "branch": "fix/assignment-compliance",
+    "commit": "cbcaaa87bd829be5b8d0ea09d4290e4f272df8b3",
+    "import_date": "2026-11-07",
+    "original_archive": "data/archive/pre-compliance-2026-11-07/clean",
+    "note": "Option chains and underlying are copied from exact Git objects; the upstream underlying hash described CRLF bytes while Git stores LF. Active hashes below describe the actual imported bytes. Rates are derived independently from the original verified Q2 raw snapshot."
+  },
   "artifacts": {
     "data/clean/option_quotes.csv": {
-      "sha256": "71a161ccddb93e61b6a988c2314f064f61dd3ba028304e1b5d749b7181a4b2a4",
-      "bytes": 69034
+      "sha256": "15bca836d4757297f8c593356eda3f1c26e42df9387117d3c95a11106ef69c6a",
+      "bytes": 370844,
+      "rows": 5898,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "contract_base": "string",
+        "contract_symbol": "string",
+        "option_type": "string",
+        "strike": "float64",
+        "expiry": "date (YYYY-MM-DD)",
+        "close": "float64",
+        "volume": "float64"
+      },
+      "first_date": "2023-03-20",
+      "last_date": "2026-01-13",
+      "units": "index points for prices; contracts for volume",
+      "unique_key": [
+        "date",
+        "expiry",
+        "strike",
+        "option_type"
+      ]
     },
     "data/clean/underlying.csv": {
       "sha256": "ca291bbcdea8837bfebd64ac1f241765d3ca980937128aa27196f1cfbdf642dd",
-      "bytes": 13648
+      "bytes": 13648,
+      "rows": 685,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "close": "float64"
+      },
+      "first_date": "2023-03-20",
+      "last_date": "2026-01-13",
+      "units": "index points for prices; contracts for volume",
+      "unique_key": [
+        "date"
+      ]
     },
     "data/clean/rates.csv": {
-      "sha256": "1d4a2f258ba64a496d2570d80d8aaf359a8015faac99ab9ee04686f340a3247a",
-      "bytes": 11845
+      "sha256": "aed07f25c24ea59830704cb36b3f9f92f3f9b7140de076aef2bb38b24b2321fc",
+      "bytes": 52120,
+      "rows": 706,
+      "schema": {
+        "date": "date (YYYY-MM-DD)",
+        "rate_on": "float64",
+        "rate_1w": "float64",
+        "rate_2w": "float64",
+        "rate_1m": "float64",
+        "rate_3m": "float64",
+        "rate_6m": "float64",
+        "rate_9m": "float64",
+        "rate_1y": "float64"
+      },
+      "first_date": "2023-03-17",
+      "last_date": "2026-01-13",
+      "units": "decimal annual simple rate",
+      "unique_key": [
+        "date"
+      ]
     }
+  },
+  "instrument": {
+    "exchange": "CFFEX",
+    "code": "IO",
+    "underlying": "CSI 300",
+    "quote_unit": "index points",
+    "contract_multiplier_cny_per_point": 100,
+    "multiplier_reference": "https://www.cffex.com.cn/u/cms/www/202207/18203127l1ql.pdf"
   }
 }

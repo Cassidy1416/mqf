@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import time
+import hashlib
 from pathlib import Path
 
 import numpy as np
@@ -15,7 +16,11 @@ from common import (
     ROOT,
     add_implied_volatility,
     filter_quotes,
-    fit_all_groups,
+    fit_svi,
+    black_scholes_forward_price,
+    butterfly_g,
+    scipy_svi,
+    svi_initial,
     load_market_data,
     save_plot,
     set_seed,
@@ -53,6 +58,7 @@ def differentiable_svi(k: np.ndarray, total_variance: np.ndarray, initial: np.nd
         optimizer.step()
         history.append(float(loss.detach()))
     with torch.no_grad():
+        history.append(float(torch.mean((torch_svi_value(k_tensor, raw) - variance_tensor)**2)))
         parameters = torch.tensor([
             torch.nn.functional.softplus(raw[0]),
             torch.nn.functional.softplus(raw[1]),
@@ -91,7 +97,7 @@ def torch_black_price(forward, strike, tau, rate, volatility, is_call):
 def surface_loss(model, inputs, forward, strike, tau, rate, is_call, target, lambda_butterfly, lambda_calendar):
     volatility = model(inputs)
     price = torch_black_price(forward, strike, tau, rate, volatility, is_call)
-    price_loss = torch.mean(((price - target) / torch.clamp(forward, min=1.0)) ** 2)
+    price_loss = torch.mean((price - target) ** 2)
     grid_k = torch.linspace(-0.4, 0.4, 41, device=inputs.device)
     grid_tau = torch.linspace(float(torch.min(tau)), float(torch.max(tau)), 12, device=inputs.device)
     mesh_k, mesh_tau = torch.meshgrid(grid_k, grid_tau, indexing="ij")
@@ -143,7 +149,7 @@ def model_price_errors(model, frame: pd.DataFrame) -> np.ndarray:
         is_call = torch.tensor((frame["option_type"] == "call").astype(float).to_numpy(), dtype=torch.float32)
         target = torch.tensor(frame["close"].to_numpy(), dtype=torch.float32)
         prediction = torch_black_price(forward, strike, tau, rate, model(inputs), is_call)
-        return (torch.abs(prediction - target) / torch.clamp(forward, min=1.0)).numpy()
+        return (torch.abs(prediction - target) / torch.clamp(target, min=1e-8)).numpy()
 
 
 def neural_arbitrage_diagnostics(model, tau_low: float, tau_high: float) -> dict:
@@ -158,11 +164,19 @@ def neural_arbitrage_diagnostics(model, tau_low: float, tau_high: float) -> dict
     time_slope = derivatives[:, 1]
     variance = torch.clamp(total_variance, min=1e-6)
     butterfly = (1 - grid[:, 0] * slope / (2 * variance)) ** 2 - slope**2 / 4 * (1 / variance + 0.25)
-    return {"butterfly_min_g": float(torch.min(butterfly)), "butterfly_violations": int(torch.sum(butterfly < -1e-8)), "calendar_violations": int(torch.sum(time_slope < -1e-8))}
+    bad_butterfly = butterfly.detach() < -1e-8
+    bad_calendar = time_slope < -1e-8
+    return {
+        "butterfly_min_g": float(torch.min(butterfly.detach())),
+        "butterfly_violations": int(bad_butterfly.sum()),
+        "calendar_violations": int(bad_calendar.sum()),
+        "butterfly_locations_k_tau": grid.detach()[bad_butterfly].tolist(),
+        "calendar_locations_k_tau": grid.detach()[bad_calendar].tolist(),
+    }
 
 
-def svi_holdout_errors(train_frame: pd.DataFrame, test_frame: pd.DataFrame) -> np.ndarray:
-    errors = []
+def svi_holdout_errors(train_frame: pd.DataFrame, test_frame: pd.DataFrame) -> pd.Series:
+    errors = {}
     for key, group in test_frame.groupby(["date", "expiry"]):
         train_group = train_frame[(train_frame["date"] == key[0]) & (train_frame["expiry"] == key[1])]
         if len(train_group) < 5:
@@ -170,16 +184,16 @@ def svi_holdout_errors(train_frame: pd.DataFrame, test_frame: pd.DataFrame) -> n
         collapsed = train_group.groupby("log_moneyness", as_index=False).agg(total_variance=("total_variance", "mean"))
         if len(collapsed) < 5:
             continue
-        from common import fit_svi, black_scholes_forward_price
         fitted = fit_svi(collapsed["log_moneyness"].to_numpy(), collapsed["total_variance"].to_numpy())
-        for _, row in group.iterrows():
+        for index, row in group.iterrows():
             volatility = np.sqrt(max(float(svi_value(row["log_moneyness"], fitted["parameters"])), 1e-10) / row["tau"])
             price = black_scholes_forward_price(row["forward"], row["strike"], row["tau"], row["rate"], volatility, row["option_type"])
-            errors.append(abs(price - row["close"]) / max(row["forward"], 1.0))
-    return np.asarray(errors)
+            errors[index] = abs(price - row["close"]) / max(row["close"], 1e-8)
+    return pd.Series(errors, dtype=float)
 
 
 def main() -> None:
+    torch.set_num_threads(2)
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", type=Path, default=ROOT / "data" / "clean")
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "approach2" / "differentiable")
@@ -195,43 +209,98 @@ def main() -> None:
     raw = load_market_data(args.data)
     filtered = filter_quotes(raw, args.min_volume, (args.moneyness_low, args.moneyness_high))
     frame, divergence_count = add_implied_volatility(filtered)
-    classical_fits = fit_all_groups(frame)
     torch_fits = {}
     convergence = []
+    diagnostic_grid = np.linspace(-0.4, 0.4, 81)
     for key, group in frame.groupby(["date", "expiry"], sort=True):
         collapsed = group.groupby("log_moneyness", as_index=False).agg(total_variance=("total_variance", "mean"))
         if len(collapsed) < 5:
             continue
         key_text = f"{key[0].date()}|{key[1].date()}"
-        if key_text not in classical_fits:
-            continue
-        classical = classical_fits[key_text]
-        torch_fit = differentiable_svi(collapsed["log_moneyness"].to_numpy(), collapsed["total_variance"].to_numpy(), np.asarray(classical["parameters"]), args.svi_epochs, args.seed)
-        torch_fits[key_text] = {"objective": torch_fit["objective"], "fit_seconds": torch_fit["fit_seconds"], "epochs": torch_fit["epochs"], "parameters": torch_fit["parameters"]}
-        convergence.append({"group": key_text, "scipy_objective": classical["objective"], "torch_objective": torch_fit["objective"], "scipy_seconds": classical["fit_seconds"], "torch_seconds": torch_fit["fit_seconds"], "scipy_iterations": classical["iterations"], "torch_epochs": torch_fit["epochs"]})
+        k = collapsed["log_moneyness"].to_numpy()
+        total_variance = collapsed["total_variance"].to_numpy()
+        initial = svi_initial(k, total_variance)
+        started = time.perf_counter()
+        scipy_fit, _, _, scipy_history = scipy_svi(k, total_variance, initial)
+        scipy_seconds = time.perf_counter() - started
+        torch_fit = differentiable_svi(k, total_variance, initial, args.svi_epochs, args.seed)
+        target = 1e-7
+        torch_fits[key_text] = {
+            "date": key[0].date().isoformat(),
+            "expiry": key[1].date().isoformat(),
+            "tau": float(group["tau"].iloc[0]),
+            "parameters": torch_fit["parameters"],
+            "butterfly_locations_k": diagnostic_grid[butterfly_g(diagnostic_grid, torch_fit["parameters"]) < -1e-8].tolist(),
+        }
+        convergence.append({
+            "group": key_text,
+            "initial_parameters": initial.tolist(),
+            "target_mse": target,
+            "scipy_objective": float(np.mean(scipy_fit.fun**2)),
+            "torch_objective": torch_fit["objective"],
+            "scipy_seconds": scipy_seconds,
+            "torch_seconds": torch_fit["fit_seconds"],
+            "scipy_iterations": int(scipy_fit.nfev),
+            "torch_epochs": torch_fit["epochs"],
+            "scipy_objective_history": scipy_history,
+            "torch_objective_history": torch_fit["history"],
+            "scipy_objective_evaluations_to_target": next((i for i, value in enumerate(scipy_history, 1) if value <= target), None),
+            "torch_updates_to_target": next((i for i, value in enumerate(torch_fit["history"]) if value <= target), None),
+        })
+    torch_calendar = []
+    dates = sorted({fit["date"] for fit in torch_fits.values()})
+    for day in dates:
+        fits = sorted((fit for fit in torch_fits.values() if fit["date"] == day), key=lambda fit: fit["tau"])
+        for near, far in zip(fits, fits[1:]):
+            difference = svi_value(diagnostic_grid, far["parameters"]) - svi_value(diagnostic_grid, near["parameters"])
+            violations = difference < -1e-8
+            if np.any(violations):
+                torch_calendar.append({
+                    "date": day, "near_expiry": near["expiry"], "far_expiry": far["expiry"],
+                    "log_moneyness": diagnostic_grid[violations].tolist(),
+                })
+    penalty_weight = 1e8
+    penalty_grid = [(0.0, 0.0), (penalty_weight, 0.0), (0.0, penalty_weight), (penalty_weight, penalty_weight)]
     ablations = {}
-    for lambda_butterfly, lambda_calendar in [(0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0)]:
+    for lambda_butterfly, lambda_calendar in penalty_grid:
         label = f"lambda_b={lambda_butterfly:g},lambda_t={lambda_calendar:g}"
         trained = train_surface(frame, args.neural_epochs, lambda_butterfly, lambda_calendar, args.seed)
         errors = model_price_errors(trained["model"], frame)
         ablations[label] = {"fit_seconds": trained["fit_seconds"], "final_loss": trained["history"][-1], "median_relative_price_error": float(np.median(errors)), "p95_relative_price_error": float(np.percentile(errors, 95)), "arbitrage": neural_arbitrage_diagnostics(trained["model"], float(frame["tau"].min()), float(frame["tau"].max()))}
     rng = np.random.default_rng(args.seed)
-    keep_mask = rng.random(len(frame)) >= 0.30
+    keep_mask = np.ones(len(frame), dtype=bool)
+    keep_mask[rng.choice(len(frame), size=round(0.30 * len(frame)), replace=False)] = False
     train_frame = frame.loc[keep_mask].copy()
     heldout_frame = frame.loc[~keep_mask].copy()
-    robustness_model = train_surface(train_frame, args.neural_epochs, 1.0, 1.0, args.seed + 1)
-    neural_errors = model_price_errors(robustness_model["model"], heldout_frame)
+    robustness_model = train_surface(train_frame, args.neural_epochs, penalty_weight, penalty_weight, args.seed + 1)
     svi_errors = svi_holdout_errors(train_frame, heldout_frame)
+    common_frame = heldout_frame.loc[svi_errors.index]
+    neural_errors = model_price_errors(robustness_model["model"], common_frame)
+    evaluation_ids = common_frame["quote_id"].tolist()
+    evaluation_fingerprint = hashlib.sha256("\n".join(sorted(evaluation_ids)).encode()).hexdigest()
+    skipped_ids = heldout_frame.loc[~heldout_frame.index.isin(svi_errors.index), "quote_id"].tolist()
+    neural_by_date = {}
+    for day, group in frame.groupby("date"):
+        neural_by_date[day.date().isoformat()] = neural_arbitrage_diagnostics(robustness_model["model"], float(group["tau"].min()), float(group["tau"].max()))
     metrics = {
+        "robustness_neural_arbitrage_by_date": neural_by_date,
         "filtered_quotes": len(filtered),
         "iv_quotes": len(frame),
         "iv_divergence_count": divergence_count,
         "torch_svi_groups": len(torch_fits),
         "convergence": convergence,
+        "torch_svi_diagnostics": {"groups": torch_fits, "calendar_violations": torch_calendar},
         "neural_ablations": ablations,
         "dropout_30_percent": {
             "train_rows": len(train_frame),
             "heldout_rows": len(heldout_frame),
+            "common_evaluation_rows": len(svi_errors),
+            "evaluation_quote_ids": evaluation_ids,
+            "evaluation_fingerprint": evaluation_fingerprint,
+            "skipped_quote_ids": skipped_ids,
+            "error_definition": "abs(predicted_price-market_price)/market_price on identical quote IDs",
+            "svi_errors": svi_errors.tolist(),
+            "neural_errors": neural_errors.tolist(),
             "neural_median_relative_error": float(np.median(neural_errors)) if len(neural_errors) else None,
             "neural_p95_relative_error": float(np.percentile(neural_errors, 95)) if len(neural_errors) else None,
             "svi_median_relative_error": float(np.median(svi_errors)) if len(svi_errors) else None,
@@ -244,9 +313,15 @@ def main() -> None:
     convergence_figure = go.Figure()
     convergence_figure.add_trace(go.Box(y=[item["scipy_seconds"] for item in convergence], name="SciPy least_squares"))
     convergence_figure.add_trace(go.Box(y=[item["torch_seconds"] for item in convergence], name="Torch Adam"))
-    convergence_figure.update_layout(title="SVI calibration wall-time comparison", yaxis_title="Seconds")
+    convergence_figure.update_layout(title="SVI calibration wall-time comparison (shared initial parameters)", yaxis_title="Seconds")
+    profiles = go.Figure()
+    for row in convergence:
+        for key, label in (("scipy_objective_history", "SciPy objective evaluations"), ("torch_objective_history", "Adam updates")):
+            profiles.add_trace(go.Scatter(y=row[key], mode="lines", name=row["group"] + " " + label, visible="legendonly" if len(profiles.data) > 3 else True))
+    profiles.update_layout(title="SVI convergence from shared initial parameters", xaxis_title="Objective evaluations (SciPy) / updates (Adam)", yaxis_type="log", yaxis_title="Total variance MSE")
+    save_plot(profiles, args.out / "objective_profiles.html")
     save_plot(convergence_figure, args.out / "svi_convergence.html")
-    write_metrics(args.out / "metrics.json", {"seed": args.seed, "svi_epochs": args.svi_epochs, "neural_epochs": args.neural_epochs, "lambda_grid": [[0.0, 0.0], [1.0, 0.0], [0.0, 1.0], [1.0, 1.0]]}, metrics, time.perf_counter() - started, {"torch_svi_groups": len(torch_fits), "neural_ablations": len(ablations)})
+    write_metrics(args.out / "metrics.json", {"question": "q1", "approach": "approach2", "dataset": "differentiable", "residual_nondeterminism": "Seeded CPU operations; platform floating-point reductions may differ.", "seed": args.seed, "svi_epochs": args.svi_epochs, "neural_epochs": args.neural_epochs, "lambda_grid": penalty_grid}, metrics, time.perf_counter() - started, {"torch_svi_groups": len(torch_fits), "neural_ablations": len(ablations)})
     table = Table(title="Q1 Approach 2: differentiable calibration")
     table.add_column("Metric")
     table.add_column("Value")

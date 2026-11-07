@@ -1,5 +1,8 @@
 {
   "params": {
+    "question": "q4",
+    "approach": "approach1",
+    "dataset": "trade",
     "seed": 42,
     "resolution": 1.0,
     "resolutions": [
@@ -8,7 +11,7 @@
       1.5
     ],
     "top_k": 6,
-    "data": "/Users/xzmini40/Desktop/ap26-q4-trade-network/data/clean"
+    "data": "/Users/cassidyshi/Documents/ChatGPT/MQF/questions/q4/data/clean"
   },
   "metrics": {
     "years": [
@@ -32,8 +35,21 @@
         "directed_edges": 126,
         "undirected_edges": 96,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.45714285714285713,
+        "degree_distribution": {
+          "6": 9,
+          "7": 4,
+          "10": 2,
+          "11": 1,
+          "12": 1,
+          "13": 1,
+          "15": 1,
+          "19": 1,
+          "20": 1
+        },
         "mean_degree": 9.142857142857142,
-        "degree_loglog_slope": -1.194475242018288,
+        "degree_loglog_slope": -1.7149328541340834,
         "assortativity": -0.34156475516005846,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -100,23 +116,23 @@
         "top_betweenness": [
           [
             842,
-            0.17863721804511276
-          ],
-          [
-            392,
-            0.09945175438596494
-          ],
-          [
-            410,
-            0.09871553884711777
+            0.18947368421052632
           ],
           [
             156,
-            0.09749373433583959
+            0.17105263157894737
           ],
           [
-            344,
-            0.08712719298245614
+            410,
+            0.10526315789473684
+          ],
+          [
+            392,
+            0.08421052631578947
+          ],
+          [
+            702,
+            0.08157894736842106
           ]
         ],
         "top_weighted_degree": [
@@ -140,15 +156,436 @@
             276,
             849760031993.685
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.21870025398854792
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.18702883990604313
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.08440595166613263
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.08173658098517474
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.07382558674515512
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06714520232135598
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.048444587699490206
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.044563586566904095
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.0388772647418579
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.023262088734044846
+            },
+            {
+              "rank": 11,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.01875393079759209
+            },
+            {
+              "rank": 12,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.016400438695783514
+            },
+            {
+              "rank": 13,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.013077940789082209
+            },
+            {
+              "rank": 14,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.012973758029724298
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.01281313230199082
+            },
+            {
+              "rank": 16,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.012003131608841797
+            },
+            {
+              "rank": 17,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.010877847355740112
+            },
+            {
+              "rank": 18,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.010001570068805369
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.009821514744597738
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.008143935110278477
+            },
+            {
+              "rank": 21,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0071428571428571435
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.18947368421052632
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.17105263157894737
+            },
+            {
+              "rank": 3,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.10526315789473684
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.08421052631578947
+            },
+            {
+              "rank": 5,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.08157894736842106
+            },
+            {
+              "rank": 6,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 7,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.060526315789473685
+            },
+            {
+              "rank": 8,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 9,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 10,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.034210526315789476
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.02631578947368421
+            },
+            {
+              "rank": 12,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.013157894736842105
+            },
+            {
+              "rank": 13,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 14,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 15,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 16,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2390527092672.189
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 1994870016582.775
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 969936858061.16
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 900279505193.696
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 849760031993.685
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 589421041456.655
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 578428290306.0
+            },
+            {
+              "rank": 8,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 509039396287.797
+            },
+            {
+              "rank": 9,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 441243942939.0
+            },
+            {
+              "rank": 10,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 411802026407.62103
+            },
+            {
+              "rank": 11,
+              "node": 702,
+              "name": "Singapore",
+              "value": 354863400263.873
+            },
+            {
+              "rank": 12,
+              "node": 643,
+              "name": "Russia",
+              "value": 224713215567.11902
+            },
+            {
+              "rank": 13,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 219045421050.922
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 194453639210.142
+            },
+            {
+              "rank": 15,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 180869744982.917
+            },
+            {
+              "rank": 16,
+              "node": 36,
+              "name": "Australia",
+              "value": 167988841756.0
+            },
+            {
+              "rank": 17,
+              "node": 764,
+              "name": "Thailand",
+              "value": 150358591279.0
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 135378246176.318
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 101581447465.0
+            },
+            {
+              "rank": 20,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 98193060939.0
+            },
+            {
+              "rank": 21,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 77044024333.903
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 4,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 4,
+          "764": 3,
+          "528": 2,
+          "702": 3,
+          "682": 4,
+          "484": 1,
+          "826": 2,
+          "784": 4
+        }
       },
       "2015": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 97,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.46190476190476193,
+        "degree_distribution": {
+          "6": 7,
+          "7": 6,
+          "9": 1,
+          "10": 1,
+          "12": 2,
+          "13": 1,
+          "14": 1,
+          "20": 2
+        },
         "mean_degree": 9.238095238095237,
-        "degree_loglog_slope": -0.7151988400901182,
+        "degree_loglog_slope": -1.2669003261065328,
         "assortativity": -0.3440806484874441,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -215,23 +652,23 @@
         "top_betweenness": [
           [
             842,
-            0.21315789473684219
-          ],
-          [
-            392,
-            0.14592105263157895
-          ],
-          [
-            702,
-            0.09811403508771929
+            0.22105263157894736
           ],
           [
             156,
-            0.09206140350877191
+            0.19736842105263158
+          ],
+          [
+            392,
+            0.13421052631578947
+          ],
+          [
+            702,
+            0.09210526315789473
           ],
           [
             276,
-            0.08324561403508772
+            0.08684210526315789
           ]
         ],
         "top_weighted_degree": [
@@ -255,15 +692,436 @@
             276,
             735495978955.9819
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.23368482553761263
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.18432567970326488
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.09025214611176328
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.07895027069829305
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.07018954999717991
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06000658972591469
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05273142363914433
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.04436801518448371
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.025706896153294675
+            },
+            {
+              "rank": 10,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.022257256283099616
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.01982048107234978
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.018593521140615396
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.015814158402887312
+            },
+            {
+              "rank": 14,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.013417893994306599
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.012512678544020115
+            },
+            {
+              "rank": 16,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.011296187247173677
+            },
+            {
+              "rank": 17,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.010603715225096042
+            },
+            {
+              "rank": 18,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.009763120282204905
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0094905100832409
+            },
+            {
+              "rank": 20,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.008185231281012856
+            },
+            {
+              "rank": 21,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.008029849693041722
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.22105263157894736
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.19736842105263158
+            },
+            {
+              "rank": 3,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.13421052631578947
+            },
+            {
+              "rank": 4,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.09210526315789473
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.08684210526315789
+            },
+            {
+              "rank": 6,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.06578947368421052
+            },
+            {
+              "rank": 7,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 8,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 9,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05263157894736842
+            },
+            {
+              "rank": 10,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 11,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 12,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.031578947368421054
+            },
+            {
+              "rank": 13,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.013157894736842105
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 15,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 16,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 18,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2230124594489.64
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 1976762964610.381
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 910383810209.74
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 776989273792.863
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 735495978955.9819
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 577691701634.398
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 563002988578.0
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 394493076000.582
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 344453387641.714
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 326483547301.722
+            },
+            {
+              "rank": 11,
+              "node": 702,
+              "name": "Singapore",
+              "value": 299633989052.161
+            },
+            {
+              "rank": 12,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 189440805150.088
+            },
+            {
+              "rank": 13,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 161507822903.931
+            },
+            {
+              "rank": 14,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 159071476210.296
+            },
+            {
+              "rank": 15,
+              "node": 643,
+              "name": "Russia",
+              "value": 149760397230.776
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 139055430682.89
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 136922971285.0
+            },
+            {
+              "rank": 18,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 123906146953.328
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 110976261676.854
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 84562563356.0
+            },
+            {
+              "rank": 21,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 76206596877.742
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 3,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 3,
+          "764": 0,
+          "528": 2,
+          "702": 3,
+          "682": 3,
+          "484": 1,
+          "826": 2,
+          "784": 3
+        }
       },
       "2016": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 94,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.44761904761904764,
+        "degree_distribution": {
+          "6": 8,
+          "7": 3,
+          "8": 2,
+          "9": 3,
+          "10": 1,
+          "12": 1,
+          "14": 1,
+          "20": 2
+        },
         "mean_degree": 8.952380952380953,
-        "degree_loglog_slope": -0.5822728387444498,
+        "degree_loglog_slope": -1.166738889001051,
         "assortativity": -0.3147961554754052,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -330,23 +1188,23 @@
         "top_betweenness": [
           [
             842,
-            0.18101503759398496
-          ],
-          [
-            392,
-            0.13141604010025063
+            0.19736842105263158
           ],
           [
             156,
-            0.11066416040100249
+            0.19473684210526315
           ],
           [
-            826,
-            0.10290100250626565
+            392,
+            0.12368421052631579
           ],
           [
             702,
-            0.09438596491228068
+            0.08947368421052632
+          ],
+          [
+            276,
+            0.08684210526315789
           ]
         ],
         "top_weighted_degree": [
@@ -370,15 +1228,436 @@
             276,
             721836388809.387
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.23473304622962335
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.182405046497317
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.0900989782825507
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.07587593927408273
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.071263637389254
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06229635795329231
+            },
+            {
+              "rank": 7,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.0493211618691603
+            },
+            {
+              "rank": 8,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.04860222846040642
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.02807695344058407
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.02235443966582758
+            },
+            {
+              "rank": 11,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.02100392814267802
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.015862710491947034
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.015808686461445825
+            },
+            {
+              "rank": 14,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.01358519983232094
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.012364658005162083
+            },
+            {
+              "rank": 16,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.011423366895166848
+            },
+            {
+              "rank": 17,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.010789172879315936
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0090567472128659
+            },
+            {
+              "rank": 19,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.009000512376289103
+            },
+            {
+              "rank": 20,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.008223661917363184
+            },
+            {
+              "rank": 21,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.00785356672334695
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.19736842105263158
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.19473684210526315
+            },
+            {
+              "rank": 3,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.12368421052631579
+            },
+            {
+              "rank": 4,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.08947368421052632
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.08684210526315789
+            },
+            {
+              "rank": 6,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 7,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.05789473684210526
+            },
+            {
+              "rank": 8,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 9,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 10,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 11,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.034210526315789476
+            },
+            {
+              "rank": 12,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.034210526315789476
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.034210526315789476
+            },
+            {
+              "rank": 14,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.02631578947368421
+            },
+            {
+              "rank": 15,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 18,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2127434049435.072
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 1927578062694.921
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 867264287675.039
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 773924340191.268
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 721836388809.387
+            },
+            {
+              "rank": 6,
+              "node": 484,
+              "name": "Mexico",
+              "value": 556455542955.0
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 523454941152.44
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 393245650127.389
+            },
+            {
+              "rank": 9,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 347405098907.895
+            },
+            {
+              "rank": 10,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 343670448465.897
+            },
+            {
+              "rank": 11,
+              "node": 702,
+              "name": "Singapore",
+              "value": 269789955764.021
+            },
+            {
+              "rank": 12,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 192325425298.08002
+            },
+            {
+              "rank": 13,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 158011647668.0
+            },
+            {
+              "rank": 14,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 157642305180.84
+            },
+            {
+              "rank": 15,
+              "node": 643,
+              "name": "Russia",
+              "value": 143325000868.365
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 138276293963.69998
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 133601942446.13
+            },
+            {
+              "rank": 18,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 112082453847.167
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 104100644509.751
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 81656387351.0
+            },
+            {
+              "rank": 21,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 75615196055.118
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 3,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 3,
+          "764": 0,
+          "528": 2,
+          "702": 3,
+          "682": 3,
+          "484": 1,
+          "826": 2,
+          "784": 3
+        }
       },
       "2017": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 96,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.45714285714285713,
+        "degree_distribution": {
+          "6": 6,
+          "7": 5,
+          "8": 3,
+          "9": 2,
+          "11": 1,
+          "13": 1,
+          "15": 1,
+          "20": 2
+        },
         "mean_degree": 9.142857142857142,
-        "degree_loglog_slope": -1.0446236955622321,
+        "degree_loglog_slope": -1.3053183516245366,
         "assortativity": -0.3246657904396529,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -444,24 +1723,24 @@
         ],
         "top_betweenness": [
           [
-            842,
-            0.2019152046783626
-          ],
-          [
-            699,
-            0.11121345029239764
-          ],
-          [
-            344,
-            0.1036549707602339
-          ],
-          [
             156,
-            0.1016374269005848
+            0.19736842105263158
+          ],
+          [
+            842,
+            0.19736842105263158
           ],
           [
             392,
-            0.09713450292397659
+            0.13157894736842105
+          ],
+          [
+            276,
+            0.09473684210526316
+          ],
+          [
+            702,
+            0.08684210526315789
           ]
         ],
         "top_weighted_degree": [
@@ -485,15 +1764,436 @@
             276,
             788339663378.73
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.2317527629976497
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.18891628377011382
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.08722011594373369
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.07268915296586355
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.07180967274457715
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06187879678058187
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05166012686922359
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.04341458154721223
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.02734220386681961
+            },
+            {
+              "rank": 10,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.02500764175642583
+            },
+            {
+              "rank": 11,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.018396202736290446
+            },
+            {
+              "rank": 12,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.01616205018690933
+            },
+            {
+              "rank": 13,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.014832764478685095
+            },
+            {
+              "rank": 14,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.01427455208306947
+            },
+            {
+              "rank": 15,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.014209586301576193
+            },
+            {
+              "rank": 16,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.011242639345523373
+            },
+            {
+              "rank": 17,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.01111852242960028
+            },
+            {
+              "rank": 18,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.010806742911306202
+            },
+            {
+              "rank": 19,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010601447889910241
+            },
+            {
+              "rank": 20,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.008759576625219671
+            },
+            {
+              "rank": 21,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.007904575769708844
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 0.19736842105263158
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 0.19736842105263158
+            },
+            {
+              "rank": 3,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.13157894736842105
+            },
+            {
+              "rank": 4,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.09473684210526316
+            },
+            {
+              "rank": 5,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.08684210526315789
+            },
+            {
+              "rank": 6,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.07894736842105263
+            },
+            {
+              "rank": 7,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.06842105263157895
+            },
+            {
+              "rank": 8,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.06578947368421052
+            },
+            {
+              "rank": 9,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.060526315789473685
+            },
+            {
+              "rank": 10,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 11,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.05263157894736842
+            },
+            {
+              "rank": 12,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.042105263157894736
+            },
+            {
+              "rank": 13,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 14,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 16,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 18,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2375064599691.194
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2081380504347.849
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 914204019393.746
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 853584515658.254
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 788339663378.73
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 611047630416.839
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 595477751620.0
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 381091005138.009
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 380568287748.163
+            },
+            {
+              "rank": 10,
+              "node": 702,
+              "name": "Singapore",
+              "value": 284932777463.169
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 273510267496.61502
+            },
+            {
+              "rank": 12,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 254173142631.33
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 194070583074.664
+            },
+            {
+              "rank": 14,
+              "node": 643,
+              "name": "Russia",
+              "value": 177645664847.425
+            },
+            {
+              "rank": 15,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 170907332949.34
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 167178209923.292
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 164663183437.774
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 121887795984.735
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 100498939336.0
+            },
+            {
+              "rank": 20,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 96573320368.82
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 37512296527.944
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 3,
+          "764": 0,
+          "528": 2,
+          "702": 3,
+          "682": 3,
+          "484": 1,
+          "826": 2,
+          "784": 3
+        }
       },
       "2018": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 94,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.44761904761904764,
+        "degree_distribution": {
+          "6": 9,
+          "7": 3,
+          "8": 2,
+          "9": 1,
+          "10": 2,
+          "13": 1,
+          "15": 1,
+          "20": 2
+        },
         "mean_degree": 8.952380952380953,
-        "degree_loglog_slope": -0.4457350326261789,
+        "degree_loglog_slope": -1.120731379344167,
         "assortativity": -0.34371674187176215,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -559,24 +2259,24 @@
         ],
         "top_betweenness": [
           [
+            156,
+            0.21578947368421053
+          ],
+          [
             842,
-            0.19843237902448432
+            0.19736842105263158
           ],
           [
             344,
-            0.11834803354540198
-          ],
-          [
-            156,
-            0.1018040293040293
+            0.10263157894736842
           ],
           [
             392,
-            0.09404159437054171
+            0.09473684210526316
           ],
           [
-            826,
-            0.07282846539425486
+            276,
+            0.08684210526315789
           ]
         ],
         "top_weighted_degree": [
@@ -600,15 +2300,435 @@
             276,
             858842442183.976
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.23292764767804108
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.18669821581401969
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.08940030160303451
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.07176840400454246
+            },
+            {
+              "rank": 5,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.07136159823053678
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.061349561397912325
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05283789201179413
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.04443732459249871
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.02813215137834548
+            },
+            {
+              "rank": 10,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.025306991426519376
+            },
+            {
+              "rank": 11,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.016226977923965904
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.015836047838785117
+            },
+            {
+              "rank": 13,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.015382905143903006
+            },
+            {
+              "rank": 14,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.014937642404589516
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.014469428871654172
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.012072942190283903
+            },
+            {
+              "rank": 17,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.011539369253952044
+            },
+            {
+              "rank": 18,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.011081733404726637
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.009081679154489283
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.008008328533548732
+            },
+            {
+              "rank": 21,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0071428571428571435
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 0.21578947368421053
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 0.19736842105263158
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.10263157894736842
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.09473684210526316
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.08684210526315789
+            },
+            {
+              "rank": 6,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 7,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.06842105263157895
+            },
+            {
+              "rank": 8,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 9,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 10,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.04473684210526316
+            },
+            {
+              "rank": 11,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.018421052631578946
+            },
+            {
+              "rank": 12,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 13,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 14,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 15,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 16,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 18,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2604306590877.503
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2263295553942.454
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 969461128373.687
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 911150127690.742
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 858842442183.976
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 681509796019.136
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 653546437810.0
+            },
+            {
+              "rank": 8,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 428262928487.014
+            },
+            {
+              "rank": 9,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 419839169502.664
+            },
+            {
+              "rank": 10,
+              "node": 702,
+              "name": "Singapore",
+              "value": 320693200004.965
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 297660496719.945
+            },
+            {
+              "rank": 12,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 286520465190.11
+            },
+            {
+              "rank": 13,
+              "node": 643,
+              "name": "Russia",
+              "value": 214209383613.414
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 200022775619.742
+            },
+            {
+              "rank": 15,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 193014153807.226
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 180214263061.80402
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 143091552280.931
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 134277800747.69699
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 119654102806.0
+            },
+            {
+              "rank": 20,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 102298754720.698
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 50338958940.36
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 3,
+          "764": 0,
+          "528": 2,
+          "702": 3,
+          "682": 3,
+          "484": 1,
+          "826": 2,
+          "784": 3
+        }
       },
       "2019": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 94,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.44761904761904764,
+        "degree_distribution": {
+          "6": 8,
+          "7": 1,
+          "8": 5,
+          "9": 3,
+          "12": 1,
+          "14": 1,
+          "20": 2
+        },
         "mean_degree": 8.952380952380953,
-        "degree_loglog_slope": -0.3811747839920214,
+        "degree_loglog_slope": -0.9936958660817311,
         "assortativity": -0.29845188457251526,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -674,24 +2794,24 @@
         ],
         "top_betweenness": [
           [
+            156,
+            0.21578947368421053
+          ],
+          [
             842,
-            0.19530653556969343
+            0.21052631578947367
           ],
           [
             344,
-            0.11272893772893774
-          ],
-          [
-            156,
-            0.10202332754964333
+            0.09736842105263158
           ],
           [
             392,
-            0.08933101985733563
+            0.08421052631578947
           ],
           [
             826,
-            0.07783834586466165
+            0.07631578947368421
           ]
         ],
         "top_weighted_degree": [
@@ -715,15 +2835,437 @@
             276,
             830543591745.884
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.23366899466430766
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.18385207323157587
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.08910405340055964
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.07191824593688965
+            },
+            {
+              "rank": 5,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.06804856916074728
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.062405410196507013
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05285940663696119
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.045250360305718565
+            },
+            {
+              "rank": 9,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.028233971024885923
+            },
+            {
+              "rank": 10,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.028075650122905242
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.019325280342966107
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.01573986521775968
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.015082457336442673
+            },
+            {
+              "rank": 14,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.014963542831965295
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.01245289707612932
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.012008155528024892
+            },
+            {
+              "rank": 17,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.01179040918253262
+            },
+            {
+              "rank": 18,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.011270147426255369
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.008833220684927753
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.007974432549081173
+            },
+            {
+              "rank": 21,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0071428571428571435
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 0.21578947368421053
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 0.21052631578947367
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.09736842105263158
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.08421052631578947
+            },
+            {
+              "rank": 5,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.07631578947368421
+            },
+            {
+              "rank": 6,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 7,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06578947368421052
+            },
+            {
+              "rank": 8,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 9,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 10,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.03684210526315789
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.021052631578947368
+            },
+            {
+              "rank": 12,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.015789473684210527
+            },
+            {
+              "rank": 13,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 14,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 15,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2485423792573.528
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2221690555684.896
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 880952704290.027
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 864916669905.199
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 830543591745.884
+            },
+            {
+              "rank": 6,
+              "node": 484,
+              "name": "Mexico",
+              "value": 648706141849.0
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 615218187783.787
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 430182481795.417
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 423741737842.49304
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 322856852029.455
+            },
+            {
+              "rank": 11,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 315199785801.734
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 305836157386.856
+            },
+            {
+              "rank": 13,
+              "node": 643,
+              "name": "Russia",
+              "value": 210640036278.982
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 197801503058.428
+            },
+            {
+              "rank": 15,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 187177923145.954
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 163085467973.771
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 156719789747.362
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 122739815285.07199
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 119692152821.0
+            },
+            {
+              "rank": 20,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 111083321435.581
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 53464389252.72
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 2,
+          "704": 0,
+          "36": 0,
+          "276": 2,
+          "458": 3,
+          "76": 1,
+          "360": 3,
+          "699": 3,
+          "764": 0,
+          "528": 2,
+          "702": 3,
+          "682": 3,
+          "484": 1,
+          "826": 2,
+          "784": 3
+        }
       },
       "2020": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 97,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.46190476190476193,
+        "degree_distribution": {
+          "6": 5,
+          "7": 4,
+          "8": 4,
+          "9": 2,
+          "10": 1,
+          "11": 1,
+          "12": 1,
+          "13": 1,
+          "20": 2
+        },
         "mean_degree": 9.238095238095237,
-        "degree_loglog_slope": -0.9178786836575897,
+        "degree_loglog_slope": -1.19395027118553,
         "assortativity": -0.27591066644659135,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -789,24 +3331,24 @@
         ],
         "top_betweenness": [
           [
-            344,
-            0.15550751879699248
-          ],
-          [
-            842,
-            0.11526942355889726
+            156,
+            0.25526315789473686
           ],
           [
             392,
-            0.11298245614035088
+            0.14473684210526316
+          ],
+          [
+            344,
+            0.12894736842105262
+          ],
+          [
+            842,
+            0.10263157894736842
           ],
           [
             699,
-            0.11105263157894738
-          ],
-          [
-            156,
-            0.1098308270676692
+            0.09999999999999999
           ]
         ],
         "top_weighted_degree": [
@@ -830,15 +3372,435 @@
             276,
             779497918662.386
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.2323917259475762
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.19672433942691395
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.08122140778205351
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.0687372834442604
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.06719298736249603
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06565524823659262
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.05637715117925974
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.047279112272694726
+            },
+            {
+              "rank": 9,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.03127329795396878
+            },
+            {
+              "rank": 10,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.027807947155660658
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.020310617902386252
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.013428803365836586
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.013054085367586711
+            },
+            {
+              "rank": 14,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.01213706444523489
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.01138202338363153
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.011108634604563924
+            },
+            {
+              "rank": 17,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.010546891966312064
+            },
+            {
+              "rank": 18,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.009985019880977133
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.008303911862536028
+            },
+            {
+              "rank": 20,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.007939589316601055
+            },
+            {
+              "rank": 21,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0071428571428571435
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 0.25526315789473686
+            },
+            {
+              "rank": 2,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.14473684210526316
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.12894736842105262
+            },
+            {
+              "rank": 4,
+              "node": 842,
+              "name": "United States",
+              "value": 0.10263157894736842
+            },
+            {
+              "rank": 5,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.09999999999999999
+            },
+            {
+              "rank": 6,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.09736842105263158
+            },
+            {
+              "rank": 7,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.09473684210526316
+            },
+            {
+              "rank": 8,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 9,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 10,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 11,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 12,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 13,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 14,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 15,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 16,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 17,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2583547184308.5
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2136624605261.187
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 898557339309.994
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 784464527689.904
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 779497918662.386
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 628129899861.408
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 572683814114.0
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 395112041499.33203
+            },
+            {
+              "rank": 9,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 373425599750.471
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 365108133199.977
+            },
+            {
+              "rank": 11,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 355270998898.362
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 292632992799.247
+            },
+            {
+              "rank": 13,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 182122278653.374
+            },
+            {
+              "rank": 14,
+              "node": 36,
+              "name": "Australia",
+              "value": 169245767639.823
+            },
+            {
+              "rank": 15,
+              "node": 643,
+              "name": "Russia",
+              "value": 166166029796.789
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 155688540900.473
+            },
+            {
+              "rank": 17,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 150130953588.372
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 114699062584.053
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 108192164971.0
+            },
+            {
+              "rank": 20,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 83733824943.056
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 48245715823.954
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 3,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 1,
+          "704": 0,
+          "36": 0,
+          "276": 1,
+          "458": 2,
+          "76": 0,
+          "360": 2,
+          "699": 2,
+          "764": 0,
+          "528": 1,
+          "702": 2,
+          "682": 2,
+          "484": 3,
+          "826": 1,
+          "784": 2
+        }
       },
       "2021": {
         "nodes": 21,
         "directed_edges": 126,
         "undirected_edges": 95,
         "density": 0.3,
+        "directed_density": 0.3,
+        "undirected_density": 0.4523809523809524,
+        "degree_distribution": {
+          "6": 7,
+          "7": 4,
+          "9": 4,
+          "10": 1,
+          "11": 2,
+          "12": 1,
+          "20": 2
+        },
         "mean_degree": 9.047619047619047,
-        "degree_loglog_slope": -0.7227566262773366,
+        "degree_loglog_slope": -1.1780477008545858,
         "assortativity": -0.2832210207835522,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -904,24 +3866,24 @@
         ],
         "top_betweenness": [
           [
-            842,
-            0.2047713032581454
-          ],
-          [
             156,
-            0.0944642857142857
+            0.2236842105263158
           ],
           [
-            702,
-            0.08822368421052633
-          ],
-          [
-            344,
-            0.08267857142857143
+            842,
+            0.20526315789473684
           ],
           [
             392,
-            0.07432017543859651
+            0.09210526315789473
+          ],
+          [
+            702,
+            0.08157894736842106
+          ],
+          [
+            490,
+            0.07368421052631578
           ]
         ],
         "top_weighted_degree": [
@@ -945,15 +3907,436 @@
             392,
             905136746913.926
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.23451204677800055
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.19600976764350553
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.0867430532501696
+            },
+            {
+              "rank": 4,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.06850269232785469
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06350565918000038
+            },
+            {
+              "rank": 6,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.062005403322119707
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.057201803637098876
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.03934607797798937
+            },
+            {
+              "rank": 9,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.03169402555949702
+            },
+            {
+              "rank": 10,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.029401500099409943
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.021955000645139985
+            },
+            {
+              "rank": 12,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.015192720223999276
+            },
+            {
+              "rank": 13,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.013698073553948444
+            },
+            {
+              "rank": 14,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.013476202261395911
+            },
+            {
+              "rank": 15,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.011458462248316932
+            },
+            {
+              "rank": 16,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.0109741658489278
+            },
+            {
+              "rank": 17,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.010553410082706627
+            },
+            {
+              "rank": 18,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.01046656145030064
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.00840470335031809
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.007755813416443315
+            },
+            {
+              "rank": 21,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0071428571428571435
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 0.2236842105263158
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 0.20526315789473684
+            },
+            {
+              "rank": 3,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.09210526315789473
+            },
+            {
+              "rank": 4,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.08157894736842106
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 6,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 7,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.07368421052631578
+            },
+            {
+              "rank": 8,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.05263157894736842
+            },
+            {
+              "rank": 9,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.049999999999999996
+            },
+            {
+              "rank": 10,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.04473684210526316
+            },
+            {
+              "rank": 11,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.02894736842105263
+            },
+            {
+              "rank": 12,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.02368421052631579
+            },
+            {
+              "rank": 13,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.021052631578947368
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 15,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 16,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 17,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 3227637068478.89
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2604952837076.873
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 1123421496633.407
+            },
+            {
+              "rank": 4,
+              "node": 276,
+              "name": "Germany",
+              "value": 926178856954.462
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 905136746913.926
+            },
+            {
+              "rank": 6,
+              "node": 410,
+              "name": "South Korea",
+              "value": 791729095972.8
+            },
+            {
+              "rank": 7,
+              "node": 484,
+              "name": "Mexico",
+              "value": 699789630665.0
+            },
+            {
+              "rank": 8,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 485028400310.597
+            },
+            {
+              "rank": 9,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 480183734660.445
+            },
+            {
+              "rank": 10,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 432825025081.88
+            },
+            {
+              "rank": 11,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 394439409647.27496
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 360183492935.056
+            },
+            {
+              "rank": 13,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 238107114036.081
+            },
+            {
+              "rank": 14,
+              "node": 643,
+              "name": "Russia",
+              "value": 229534551372.825
+            },
+            {
+              "rank": 15,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 225814175285.855
+            },
+            {
+              "rank": 16,
+              "node": 36,
+              "name": "Australia",
+              "value": 203586989274.203
+            },
+            {
+              "rank": 17,
+              "node": 764,
+              "name": "Thailand",
+              "value": 186162475686.569
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 163303140568.516
+            },
+            {
+              "rank": 19,
+              "node": 76,
+              "name": "Brazil",
+              "value": 149086424363.0
+            },
+            {
+              "rank": 20,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 124106360880.181
+            },
+            {
+              "rank": 21,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 58844629929.201
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 3,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 1,
+          "704": 0,
+          "36": 0,
+          "276": 1,
+          "458": 2,
+          "76": 0,
+          "360": 2,
+          "699": 2,
+          "764": 0,
+          "528": 1,
+          "702": 2,
+          "682": 2,
+          "484": 3,
+          "826": 1,
+          "784": 2
+        }
       },
       "2022": {
         "nodes": 21,
         "directed_edges": 120,
         "undirected_edges": 91,
         "density": 0.2857142857142857,
+        "directed_density": 0.2857142857142857,
+        "undirected_density": 0.43333333333333335,
+        "degree_distribution": {
+          "0": 1,
+          "6": 5,
+          "7": 6,
+          "9": 2,
+          "10": 3,
+          "11": 1,
+          "13": 1,
+          "19": 2
+        },
         "mean_degree": 8.666666666666666,
-        "degree_loglog_slope": -1.121118158722471,
+        "degree_loglog_slope": -1.2505112700877836,
         "assortativity": -0.29159027720428377,
         "connected_components": 2,
         "isolated_nodes": 1,
@@ -1020,23 +4403,23 @@
         "top_betweenness": [
           [
             842,
-            0.19916666666666663
-          ],
-          [
-            392,
-            0.10938596491228068
+            0.21578947368421053
           ],
           [
             156,
-            0.0949561403508772
+            0.2131578947368421
           ],
           [
-            702,
-            0.08771929824561404
+            392,
+            0.10789473684210527
           ],
           [
             699,
-            0.08087719298245613
+            0.08684210526315789
+          ],
+          [
+            702,
+            0.08421052631578947
           ]
         ],
         "top_weighted_degree": [
@@ -1060,15 +4443,436 @@
             276,
             831235643092.193
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.24046279118064195
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.17214129720870358
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.09261797737375936
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.06250269279827819
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.060575532826098365
+            },
+            {
+              "rank": 6,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.0570584025601607
+            },
+            {
+              "rank": 7,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.0498530815019107
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.04341033131172407
+            },
+            {
+              "rank": 9,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.03845135085224339
+            },
+            {
+              "rank": 10,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.029553846233114293
+            },
+            {
+              "rank": 11,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.029270026629652994
+            },
+            {
+              "rank": 12,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.022167032616220356
+            },
+            {
+              "rank": 13,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.01727611755887668
+            },
+            {
+              "rank": 14,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.015995486329620827
+            },
+            {
+              "rank": 15,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.012092285336113312
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.011966022651095204
+            },
+            {
+              "rank": 17,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.011549334215703273
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.009244776467993038
+            },
+            {
+              "rank": 19,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.00823520789917371
+            },
+            {
+              "rank": 20,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.008132237714424841
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.007444168734491316
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.21578947368421053
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.2131578947368421
+            },
+            {
+              "rank": 3,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.10789473684210527
+            },
+            {
+              "rank": 4,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.08684210526315789
+            },
+            {
+              "rank": 5,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.08421052631578947
+            },
+            {
+              "rank": 6,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.060526315789473685
+            },
+            {
+              "rank": 7,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.05526315789473684
+            },
+            {
+              "rank": 8,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.04736842105263158
+            },
+            {
+              "rank": 9,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.042105263157894736
+            },
+            {
+              "rank": 10,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.021052631578947368
+            },
+            {
+              "rank": 11,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 12,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 13,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 14,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 15,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 16,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 17,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 18,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 3079008685056.149
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2862220281127.097
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 1005449394776.1211
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 968180635487.695
+            },
+            {
+              "rank": 5,
+              "node": 276,
+              "name": "Germany",
+              "value": 831235643092.193
+            },
+            {
+              "rank": 6,
+              "node": 484,
+              "name": "Mexico",
+              "value": 820679717434.0
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 733740729264.345
+            },
+            {
+              "rank": 8,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 581999409567.203
+            },
+            {
+              "rank": 9,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 501393976170.072
+            },
+            {
+              "rank": 10,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 472633828508.163
+            },
+            {
+              "rank": 11,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 432548673399.09503
+            },
+            {
+              "rank": 12,
+              "node": 702,
+              "name": "Singapore",
+              "value": 404956665082.963
+            },
+            {
+              "rank": 13,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 385392048099.862
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 277721175824.96
+            },
+            {
+              "rank": 15,
+              "node": 36,
+              "name": "Australia",
+              "value": 235914659107.9
+            },
+            {
+              "rank": 16,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 209664413131.534
+            },
+            {
+              "rank": 17,
+              "node": 764,
+              "name": "Thailand",
+              "value": 191241869433.401
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 166056974961.0
+            },
+            {
+              "rank": 19,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 144033213634.469
+            },
+            {
+              "rank": 20,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 66878200084.841995
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 3,
+          "704": 0,
+          "36": 0,
+          "276": 1,
+          "458": 2,
+          "76": 0,
+          "360": 2,
+          "699": 2,
+          "764": 0,
+          "528": 1,
+          "702": 2,
+          "682": 2,
+          "484": 1,
+          "826": 1,
+          "784": 2
+        }
       },
       "2023": {
         "nodes": 21,
         "directed_edges": 120,
         "undirected_edges": 91,
         "density": 0.2857142857142857,
+        "directed_density": 0.2857142857142857,
+        "undirected_density": 0.43333333333333335,
+        "degree_distribution": {
+          "1": 1,
+          "6": 7,
+          "7": 4,
+          "9": 2,
+          "10": 2,
+          "11": 2,
+          "13": 1,
+          "19": 2
+        },
         "mean_degree": 8.666666666666666,
-        "degree_loglog_slope": -1.2078013283729878,
+        "degree_loglog_slope": 0.1237840402812479,
         "assortativity": -0.27685692525756844,
         "connected_components": 1,
         "isolated_nodes": 0,
@@ -1135,23 +4939,23 @@
         "top_betweenness": [
           [
             842,
-            0.1887280701754386
-          ],
-          [
-            392,
-            0.1182017543859649
-          ],
-          [
-            344,
-            0.11087719298245613
-          ],
-          [
-            784,
-            0.09868421052631579
+            0.21842105263157893
           ],
           [
             156,
-            0.09557017543859649
+            0.2131578947368421
+          ],
+          [
+            699,
+            0.11842105263157894
+          ],
+          [
+            392,
+            0.11052631578947368
+          ],
+          [
+            784,
+            0.09736842105263158
           ]
         ],
         "top_weighted_degree": [
@@ -1175,15 +4979,435 @@
             484,
             838176404202.0
           ]
-        ]
+        ],
+        "centrality_rankings": {
+          "pagerank": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.24270600975517187
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.16715344190248038
+            },
+            {
+              "rank": 3,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.09331053114524317
+            },
+            {
+              "rank": 4,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.06246584486085556
+            },
+            {
+              "rank": 5,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.05916566288201898
+            },
+            {
+              "rank": 6,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.05555516497359368
+            },
+            {
+              "rank": 7,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.05323241284428689
+            },
+            {
+              "rank": 8,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.0449239242467826
+            },
+            {
+              "rank": 9,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.038358821856219846
+            },
+            {
+              "rank": 10,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.03224903495286811
+            },
+            {
+              "rank": 11,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.02916821472361033
+            },
+            {
+              "rank": 12,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.018810641772067507
+            },
+            {
+              "rank": 13,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.018643705445462483
+            },
+            {
+              "rank": 14,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.015203554312216693
+            },
+            {
+              "rank": 15,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.012329689663093248
+            },
+            {
+              "rank": 16,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.01165567502064569
+            },
+            {
+              "rank": 17,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.01115256084043906
+            },
+            {
+              "rank": 18,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.009223970233331404
+            },
+            {
+              "rank": 19,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.008323773992544798
+            },
+            {
+              "rank": 20,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.008215505523502536
+            },
+            {
+              "rank": 21,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.00815185905356507
+            }
+          ],
+          "betweenness": [
+            {
+              "rank": 1,
+              "node": 842,
+              "name": "United States",
+              "value": 0.21842105263157893
+            },
+            {
+              "rank": 2,
+              "node": 156,
+              "name": "China",
+              "value": 0.2131578947368421
+            },
+            {
+              "rank": 3,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 0.11842105263157894
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 0.11052631578947368
+            },
+            {
+              "rank": 5,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 0.09736842105263158
+            },
+            {
+              "rank": 6,
+              "node": 702,
+              "name": "Singapore",
+              "value": 0.07894736842105263
+            },
+            {
+              "rank": 7,
+              "node": 764,
+              "name": "Thailand",
+              "value": 0.05789473684210526
+            },
+            {
+              "rank": 8,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 0.05263157894736842
+            },
+            {
+              "rank": 9,
+              "node": 484,
+              "name": "Mexico",
+              "value": 0.04736842105263158
+            },
+            {
+              "rank": 10,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 0.04473684210526316
+            },
+            {
+              "rank": 11,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 0.010526315789473684
+            },
+            {
+              "rank": 12,
+              "node": 276,
+              "name": "Germany",
+              "value": 0.007894736842105263
+            },
+            {
+              "rank": 13,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 0.005263157894736842
+            },
+            {
+              "rank": 14,
+              "node": 410,
+              "name": "South Korea",
+              "value": 0.002631578947368421
+            },
+            {
+              "rank": 15,
+              "node": 36,
+              "name": "Australia",
+              "value": 0.0
+            },
+            {
+              "rank": 16,
+              "node": 76,
+              "name": "Brazil",
+              "value": 0.0
+            },
+            {
+              "rank": 17,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 0.0
+            },
+            {
+              "rank": 18,
+              "node": 643,
+              "name": "Russia",
+              "value": 0.0
+            },
+            {
+              "rank": 19,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 0.0
+            },
+            {
+              "rank": 20,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 0.0
+            },
+            {
+              "rank": 21,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 0.0
+            }
+          ],
+          "weighted_degree": [
+            {
+              "rank": 1,
+              "node": 156,
+              "name": "China",
+              "value": 2855563321193.983
+            },
+            {
+              "rank": 2,
+              "node": 842,
+              "name": "United States",
+              "value": 2798728956804.4067
+            },
+            {
+              "rank": 3,
+              "node": 344,
+              "name": "Hong Kong",
+              "value": 933256028331.6849
+            },
+            {
+              "rank": 4,
+              "node": 392,
+              "name": "Japan",
+              "value": 872815052378.738
+            },
+            {
+              "rank": 5,
+              "node": 484,
+              "name": "Mexico",
+              "value": 838176404202.0
+            },
+            {
+              "rank": 6,
+              "node": 276,
+              "name": "Germany",
+              "value": 816047520312.734
+            },
+            {
+              "rank": 7,
+              "node": 410,
+              "name": "South Korea",
+              "value": 681383157842.475
+            },
+            {
+              "rank": 8,
+              "node": 528,
+              "name": "Netherlands",
+              "value": 566898089964.907
+            },
+            {
+              "rank": 9,
+              "node": 704,
+              "name": "Vietnam",
+              "value": 440969406332.649
+            },
+            {
+              "rank": 10,
+              "node": 826,
+              "name": "United Kingdom",
+              "value": 429047337796.987
+            },
+            {
+              "rank": 11,
+              "node": 490,
+              "name": "Partner 490",
+              "value": 412448198487.743
+            },
+            {
+              "rank": 12,
+              "node": 699,
+              "name": "Partner 699",
+              "value": 392645336801.75
+            },
+            {
+              "rank": 13,
+              "node": 702,
+              "name": "Singapore",
+              "value": 373825100667.639
+            },
+            {
+              "rank": 14,
+              "node": 458,
+              "name": "Malaysia",
+              "value": 246279131667.988
+            },
+            {
+              "rank": 15,
+              "node": 36,
+              "name": "Australia",
+              "value": 228247782240.431
+            },
+            {
+              "rank": 16,
+              "node": 360,
+              "name": "Indonesia",
+              "value": 190211499232.821
+            },
+            {
+              "rank": 17,
+              "node": 764,
+              "name": "Thailand",
+              "value": 184841943383.286
+            },
+            {
+              "rank": 18,
+              "node": 76,
+              "name": "Brazil",
+              "value": 180894993937.0
+            },
+            {
+              "rank": 19,
+              "node": 784,
+              "name": "Partner 784",
+              "value": 158526474794.581
+            },
+            {
+              "rank": 20,
+              "node": 682,
+              "name": "Saudi Arabia",
+              "value": 63506822224.86
+            },
+            {
+              "rank": 21,
+              "node": 643,
+              "name": "Russia",
+              "value": 4492377530.526
+            }
+          ]
+        },
+        "community_labels": {
+          "156": 0,
+          "842": 1,
+          "392": 0,
+          "410": 0,
+          "344": 0,
+          "490": 0,
+          "643": 3,
+          "704": 0,
+          "36": 0,
+          "276": 1,
+          "458": 2,
+          "76": 0,
+          "360": 2,
+          "699": 3,
+          "764": 0,
+          "528": 1,
+          "702": 2,
+          "682": 3,
+          "484": 1,
+          "826": 1,
+          "784": 3
+        }
       }
     },
     "community_migration": {
       "2014->2015": {
         "previous_communities": 5,
         "current_communities": 4,
-        "changed_share": 0.19047619047619047,
-        "ari": 0.6979038224414303,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             6,
@@ -1215,13 +5439,38 @@
             0,
             4
           ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 4
+        },
+        "changed_share": 0.19047619047619047,
+        "ari": 0.6979038224414303,
+        "split_previous_labels": [
+          3
+        ],
+        "merged_current_labels": [
+          0,
+          3
         ]
       },
       "2015->2016": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.0,
-        "ari": 1.0,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             7,
@@ -1247,13 +5496,33 @@
             0,
             7
           ]
-        ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.0,
+        "ari": 1.0,
+        "split_previous_labels": [],
+        "merged_current_labels": []
       },
       "2016->2017": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.047619047619047616,
-        "ari": 0.8327820654171261,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             7,
@@ -1279,13 +5548,37 @@
             0,
             6
           ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.047619047619047616,
+        "ari": 0.8327820654171261,
+        "split_previous_labels": [
+          3
+        ],
+        "merged_current_labels": [
+          0
         ]
       },
       "2017->2018": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.0,
-        "ari": 1.0,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             8,
@@ -1311,13 +5604,33 @@
             0,
             6
           ]
-        ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.0,
+        "ari": 1.0,
+        "split_previous_labels": [],
+        "merged_current_labels": []
       },
       "2018->2019": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.0,
-        "ari": 1.0,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             8,
@@ -1343,13 +5656,33 @@
             0,
             6
           ]
-        ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.0,
+        "ari": 1.0,
+        "split_previous_labels": [],
+        "merged_current_labels": []
       },
       "2019->2020": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.047619047619047616,
-        "ari": 0.8769627372861495,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             8,
@@ -1359,29 +5692,53 @@
           ],
           [
             1,
-            2,
             0,
-            0
+            0,
+            2
           ],
           [
-            0,
             0,
             4,
+            0,
             0
           ],
           [
             0,
             0,
-            0,
-            6
+            6,
+            0
           ]
+        ],
+        "alignment": {
+          "0": 0,
+          "3": 1,
+          "1": 2,
+          "2": 3
+        },
+        "changed_share": 0.047619047619047616,
+        "ari": 0.8769627372861495,
+        "split_previous_labels": [
+          1
+        ],
+        "merged_current_labels": [
+          0
         ]
       },
       "2020->2021": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.0,
-        "ari": 1.0,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             9,
@@ -1407,62 +5764,128 @@
             0,
             2
           ]
-        ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.0,
+        "ari": 1.0,
+        "split_previous_labels": [],
+        "merged_current_labels": []
       },
       "2021->2022": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.09523809523809523,
-        "ari": 0.89449592497488,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             9,
             0,
+            0,
             0
           ],
           [
             0,
-            4,
-            0
+            3,
+            0,
+            1
           ],
           [
             0,
             0,
-            6
+            6,
+            0
           ],
           [
             0,
             2,
+            0,
             0
           ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.14285714285714285,
+        "ari": 0.89449592497488,
+        "split_previous_labels": [
+          1
+        ],
+        "merged_current_labels": [
+          1
         ]
       },
       "2022->2023": {
         "previous_communities": 4,
         "current_communities": 4,
-        "changed_share": 0.047619047619047616,
-        "ari": 0.8572237960339943,
+        "row_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "column_labels": [
+          0,
+          1,
+          2,
+          3
+        ],
         "contingency": [
           [
             9,
+            0,
             0,
             0
           ],
           [
             0,
             5,
+            0,
             0
           ],
           [
             0,
             0,
-            6
+            3,
+            3
           ],
           [
             0,
             0,
+            0,
             1
           ]
+        ],
+        "alignment": {
+          "0": 0,
+          "1": 1,
+          "2": 2,
+          "3": 3
+        },
+        "changed_share": 0.14285714285714285,
+        "ari": 0.8572237960339943,
+        "split_previous_labels": [
+          2
+        ],
+        "merged_current_labels": [
+          3
         ]
       }
     },
@@ -1472,7 +5895,7 @@
       "region_proxy_note": "Trade-network nodes are countries; region is used as a transparent proxy because stock industry labels are not defined for countries."
     }
   },
-  "fit_seconds": 0.09162916700006463,
+  "fit_seconds": 0.24407016698387451,
   "history": {
     "years": [
       2014,

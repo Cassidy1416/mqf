@@ -6,18 +6,20 @@ data/metadata.json), calibrates per-futures log-return GBM parameters
 from closes on or before the valuation date, and reports a
 SHIBOR-interpolated continuous discount rate for the requested maturity.
 
-Later milestones add more payoffs, metrics.json and figures; nothing
-under results/ is written yet. Daily GBM paths (252 steps per year)
-feed the Monte Carlo prices of an at-the-money European call, an
-arithmetic Asian call, an up-and-out call, and a cash-or-nothing
-digital call; the European Monte Carlo price is validated against
-Black-Scholes within three standard errors of the estimator.
+Daily GBM paths (ceil(252 * T) steps per year) feed the Monte Carlo
+prices of an at-the-money European call, an arithmetic Asian call, an
+up-and-out call, and a cash-or-nothing digital call. The European
+headline price is checked against Black-Scholes within three standard
+errors (headline parity_z), and an independent validation stream runs
+its own parity check (validation_z); the two z-scores are reported
+separately and never substituted for each other.
 
 Per the contract, each run writes results/approach1/<dataset>/metrics.json
-(keys params, metrics, fit_seconds, history) and an embedded-Plotly
-figures.html under the same directory; the seed splits into training
-(reserved, calibration is deterministic), validation (parity check), and
-testing (headline prices) streams.
+(keys params, metrics, fit_seconds, history) plus figures.html,
+estimators.html and performance_profile.txt under the same directory;
+the seed splits into training (reserved, calibration is deterministic),
+validation (validation_z parity check), and testing streams
+(headline parity_z, estimator comparison, greeks, RMSE analysis).
 """
 
 from __future__ import annotations
@@ -73,6 +75,29 @@ PERF_SCALAR_REPEATS = 3
 PERF_VECTORIZED_REPEATS = 50
 
 console = Console()
+
+
+def daily_steps(maturity_years: float) -> int:
+    """Daily step count for a maturity: ceil(252 * T), at least one step."""
+    return max(1, math.ceil(STEPS_PER_YEAR * maturity_years))
+
+
+def control_coefficient(target: np.ndarray, control: np.ndarray, axis: int = 0) -> np.ndarray:
+    """OLS beta of target on control along axis, using matching sample moments.
+
+    Sample covariance and sample variance both use ddof=1 so the ratio equals
+    the unbiased affine-control regression coefficient; mixing moment
+    normalizations would scale beta by (N-1)/N.
+    """
+    target, control = np.broadcast_arrays(np.asarray(target, dtype=float), np.asarray(control, dtype=float))
+    if target.shape[axis] != control.shape[axis] or target.shape[axis] < 2:
+        raise ValueError("control_coefficient needs matched inputs with at least two samples along the axis")
+    count = target.shape[axis]
+    target_mean = target.mean(axis=axis, keepdims=True)
+    control_mean = control.mean(axis=axis, keepdims=True)
+    covariance = ((target - target_mean) * (control - control_mean)).sum(axis=axis) / (count - 1)
+    variance = ((control - control_mean) ** 2).sum(axis=axis) / (count - 1)
+    return np.divide(covariance, variance, out=np.zeros_like(covariance), where=variance > 0)
 
 
 def load_fetch_module():
@@ -178,7 +203,7 @@ def black_scholes_call(spot: float, strike: float, rate: float, vol: float, matu
 
 
 def simulate_gbm_daily(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float, track_geometric: bool = False) -> dict:
-    steps = max(1, round(STEPS_PER_YEAR * maturity_years))
+    steps = daily_steps(maturity_years)
     dt = maturity_years / steps
     drift = (rate - 0.5 * vol * vol) * dt
     diffusion = vol * math.sqrt(dt)
@@ -204,9 +229,9 @@ def simulate_gbm_daily(rng: np.random.Generator, spot: float, vol: float, rate: 
     return states
 
 
-def antithetic_states(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float, n_paths: int = MC_PATHS) -> dict:
+def antithetic_states(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float, n_paths: int = MC_PATHS, track_geometric: bool = False) -> dict:
     pairs = n_paths // 2
-    steps = max(1, round(STEPS_PER_YEAR * maturity_years))
+    steps = daily_steps(maturity_years)
     dt = maturity_years / steps
     drift = (rate - 0.5 * vol * vol) * dt
     diffusion = vol * math.sqrt(dt)
@@ -216,6 +241,8 @@ def antithetic_states(rng: np.random.Generator, spot: float, vol: float, rate: f
     minus_sum = np.zeros(pairs)
     plus_max = np.full(pairs, spot)
     minus_max = np.full(pairs, spot)
+    plus_log = np.zeros(pairs) if track_geometric else None
+    minus_log = np.zeros(pairs) if track_geometric else None
     for _ in range(steps):
         z = rng.standard_normal(pairs)
         plus *= np.exp(drift + diffusion * z)
@@ -224,7 +251,10 @@ def antithetic_states(rng: np.random.Generator, spot: float, vol: float, rate: f
         minus_sum += minus
         np.maximum(plus_max, plus, out=plus_max)
         np.maximum(minus_max, minus, out=minus_max)
-    return {
+        if track_geometric:
+            plus_log += np.log(plus)
+            minus_log += np.log(minus)
+    states = {
         "terminal": np.concatenate([plus, minus]),
         "average": np.concatenate([plus_sum, minus_sum]) / steps,
         "maximum": np.concatenate([plus_max, minus_max]),
@@ -232,6 +262,9 @@ def antithetic_states(rng: np.random.Generator, spot: float, vol: float, rate: f
         "steps": steps,
         "dt": dt,
     }
+    if track_geometric:
+        states["geometric"] = np.concatenate([np.exp(plus_log / steps), np.exp(minus_log / steps)])
+    return states
 
 
 def payoff_arrays(terminal: np.ndarray, average: np.ndarray, maximum: np.ndarray, strike: float, barrier: float) -> dict:
@@ -336,7 +369,7 @@ def geometric_cv_asian(rng: np.random.Generator, spot: float, vol: float, rate: 
     target = discount * payoffs["asian"]
     control = discount * np.maximum(simulated["geometric"] - spot, 0.0)
     analytic_control = geometric_asian_call(spot, spot, rate, vol, maturity_years, simulated["steps"])
-    beta = float(np.cov(target, control, ddof=1)[0, 1] / np.var(control, ddof=1))
+    beta = float(control_coefficient(target, control, axis=0))
     adjusted = target - beta * (control - analytic_control)
     return {
         "price": float(adjusted.mean()),
@@ -348,7 +381,7 @@ def geometric_cv_asian(rng: np.random.Generator, spot: float, vol: float, rate: 
 
 
 def greek_engine(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float) -> dict:
-    steps = max(1, round(STEPS_PER_YEAR * maturity_years))
+    steps = daily_steps(maturity_years)
     dt = maturity_years / steps
     strike = spot
     barrier = BARRIER_MULTIPLE * spot
@@ -440,23 +473,41 @@ def fit_log_log_slope(counts: list[int], errors: list[float]) -> dict:
     log_n = np.log(np.asarray(counts, dtype=float))
     log_rmse = np.log(np.asarray(errors, dtype=float))
     slope, intercept = np.polyfit(log_n, log_rmse, 1)
-    return {"slope": float(slope), "factor_at_1000_paths": float(math.exp(intercept))}
+    return {"slope": float(slope), "factor_at_1000_paths": float(math.exp(intercept + slope * math.log(1000)))}
 
 
-def asian_reference_antithetic(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float) -> dict:
-    states = antithetic_states(rng, spot, vol, rate, maturity_years, n_paths=2 * REFERENCE_PAIRS)
-    payoff = np.maximum(states["average"] - spot, 0.0)
+def asian_reference(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float) -> dict:
+    """High-precision independent arithmetic-Asian reference.
+
+    Plain antithetic pairs over the full one-million-pair budget are enhanced
+    with the analytic geometric-Asian control variate (antithetic + CV), so
+    the reference is far more precise than a plain-antithetic estimate, which
+    must not be treated as exact. The draw is independent of the RMSE-study
+    replicates, which use the same stream only afterwards.
+    """
+    states = antithetic_states(rng, spot, vol, rate, maturity_years, n_paths=2 * REFERENCE_PAIRS, track_geometric=True)
     discount = math.exp(-rate * maturity_years)
-    pair_average = 0.5 * (payoff[:REFERENCE_PAIRS] + payoff[REFERENCE_PAIRS:])
+    target = discount * np.maximum(states["average"] - spot, 0.0)
+    control = discount * np.maximum(states["geometric"] - spot, 0.0)
+    analytic_control = geometric_asian_call(spot, spot, rate, vol, maturity_years, states["steps"])
+    pairs = states["pairs"]
+    target = 0.5 * (target[:pairs] + target[pairs:])
+    control = 0.5 * (control[:pairs] + control[pairs:])
+    beta = float(control_coefficient(target, control, axis=0))
+    adjusted = target - beta * (control - analytic_control)
     return {
-        "price": float(discount * pair_average.mean()),
-        "standard_error": float(discount * pair_average.std(ddof=1) / math.sqrt(REFERENCE_PAIRS)),
+        "price": float(adjusted.mean()),
+        "standard_error": float(adjusted.std(ddof=1) / math.sqrt(REFERENCE_PAIRS)),
         "pairs": REFERENCE_PAIRS,
+        "steps": states["steps"],
+        "beta": beta,
+        "control_price": analytic_control,
     }
 
 
-def rmse_study(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float, asian_truth: float, european_truth: float) -> dict:
-    steps = max(1, round(STEPS_PER_YEAR * maturity_years))
+def rmse_study(rng: np.random.Generator, spot: float, vol: float, rate: float, maturity_years: float, asian_reference_result: dict, european_truth: float) -> dict:
+    asian_truth = asian_reference_result["price"]
+    steps = daily_steps(maturity_years)
     dt = maturity_years / steps
     drift = (rate - 0.5 * vol * vol) * dt
     diffusion = vol * math.sqrt(dt)
@@ -483,12 +534,10 @@ def rmse_study(rng: np.random.Generator, spot: float, vol: float, rate: float, m
         control_price = geometric_asian_call(spot, strike, rate, vol, maturity_years, steps)
         target = discount * np.maximum(average - strike, 0.0)
         control = discount * np.maximum(geometric - strike, 0.0)
-        mean_target = target.mean(axis=1, keepdims=True)
-        mean_control = control.mean(axis=1, keepdims=True)
-        variance_control = control.var(axis=1, keepdims=True, ddof=1)
-        covariance = (target * control).mean(axis=1, keepdims=True) - mean_target * mean_control
-        beta = np.divide(covariance, variance_control, out=np.zeros_like(covariance), where=variance_control > 0)
-        cv_rows = (mean_target - beta * (mean_control - control_price)).ravel()
+        mean_target = target.mean(axis=1)
+        mean_control = control.mean(axis=1)
+        beta = control_coefficient(target, control, axis=1)
+        cv_rows = mean_target - beta * (mean_control - control_price)
 
         pairs = n_paths // 2
         plus = np.full((reps, pairs), spot)
@@ -528,7 +577,15 @@ def rmse_study(rng: np.random.Generator, spot: float, vol: float, rate: float, m
         "path_counts": counts,
         "replications": list(RMSE_REPS),
         "european_truth": european_truth,
-        "asian_truth": asian_truth,
+        "asian_truth": asian_reference_result["price"],
+        "asian_reference": {
+            "price": asian_reference_result["price"],
+            "standard_error": asian_reference_result["standard_error"],
+            "pairs": asian_reference_result["pairs"],
+            "steps": asian_reference_result["steps"],
+            "beta": asian_reference_result["beta"],
+            "control_price": asian_reference_result["control_price"],
+        },
         "series": {},
         "slopes": {},
     }
@@ -538,31 +595,41 @@ def rmse_study(rng: np.random.Generator, spot: float, vol: float, rate: float, m
     return result
 
 
+def scalar_average_price(spot: float, vol: float, rate: float, steps: int, dt: float, paths: int, seed: int = 0) -> float:
+    """Pure-python GBM running-average price, using the same dt = T/steps as every other engine."""
+    rng = random.Random(seed)
+    drift_step = (rate - 0.5 * vol * vol) * dt
+    diffusion_step = vol * math.sqrt(dt)
+    accumulator = 0.0
+    for _ in range(paths):
+        price = spot
+        for _ in range(steps):
+            price *= math.exp(drift_step + diffusion_step * rng.gauss(0.0, 1.0))
+            accumulator += price
+    return accumulator / (paths * steps)
+
+
+def vectorized_average_price(spot: float, vol: float, rate: float, steps: int, dt: float, paths: int, seed: int = 0) -> float:
+    """NumPy GBM running-average price sharing the scalar engine's exact step size dt = T/steps."""
+    gen = np.random.default_rng(seed)
+    prices = np.full(paths, spot)
+    accumulator = np.zeros(paths)
+    for _ in range(steps):
+        step_factor = np.exp((rate - 0.5 * vol * vol) * dt + vol * math.sqrt(dt) * gen.standard_normal(paths))
+        prices *= step_factor
+        accumulator += prices
+    return float(accumulator.mean() / steps)
+
+
 def performance_comparison(spot: float, vol: float, rate: float, maturity_years: float) -> dict:
-    steps = max(1, round(STEPS_PER_YEAR * maturity_years))
+    steps = daily_steps(maturity_years)
+    dt = maturity_years / steps
 
     def scalar_run() -> float:
-        rng = random.Random(0)
-        drift_step = (rate - 0.5 * vol * vol) / STEPS_PER_YEAR
-        diffusion_step = vol * math.sqrt(1 / STEPS_PER_YEAR)
-        accumulator = 0.0
-        for _ in range(PERF_PATHS):
-            price = spot
-            for _ in range(steps):
-                price *= math.exp(drift_step + diffusion_step * rng.gauss(0.0, 1.0))
-                accumulator += price
-        return accumulator / (PERF_PATHS * steps)
+        return scalar_average_price(spot, vol, rate, steps, dt, PERF_PATHS)
 
     def vectorized_run() -> float:
-        gen = np.random.default_rng(0)
-        dt = maturity_years / steps
-        prices = np.full(PERF_PATHS, spot)
-        accumulator = np.zeros(PERF_PATHS)
-        for _ in range(steps):
-            step_factor = np.exp((rate - 0.5 * vol * vol) * dt + vol * math.sqrt(dt) * gen.standard_normal(PERF_PATHS))
-            prices *= step_factor
-            accumulator += prices
-        return float(accumulator.mean() / steps)
+        return vectorized_average_price(spot, vol, rate, steps, dt, PERF_PATHS)
 
     profiler = cProfile.Profile()
     profiler.enable()
@@ -670,9 +737,12 @@ def print_rmse_table(rmse: dict) -> None:
             series = rmse["series"][f"{estimator}_{payoff}"]
             table.add_row(payoff, estimator, f"{rmse['slopes'][f'{estimator}_{payoff}']['slope']:+.3f}", f"{series['rmse'][-1]:.4f}")
     console.print(table)
+    reference = rmse["asian_reference"]
     console.print(
         f"Truths: European = Black-Scholes ({rmse['european_truth']:.4f}), "
-        f"asian = antithetic reference ({REFERENCE_PAIRS:,} pairs): {rmse['asian_truth']:.4f}"
+        f"asian = independent antithetic+geometric-CV reference ({reference['pairs']:,} pairs, "
+        f"{reference['steps']} steps): {reference['price']:.4f} with its own standard error "
+        f"{reference['standard_error']:.2e}; the plotted RMSE is measured against this uncertain reference"
     )
     console.print()
 
@@ -720,12 +790,14 @@ def make_estimator_figure(rmse: dict, greeks: dict) -> go.Figure:
 def print_pricing_table(name: str, spot: float, vol: float, rate: float, maturity_years: float, priced: dict, validation: dict) -> None:
     steps = priced["simulated"]["steps"]
     strike_text = f"{priced['strike']:.2f}"
+    headline = priced["estimates"]["european"]
+    headline_z = (headline["price"] - validation["black_scholes"]) / headline["standard_error"]
     table = Table(
         title=f"{name.upper()} payoffs - {MC_PATHS:,} paths, {steps} daily steps "
         f"(S0 = {spot:.2f}, vol = {vol:.4f}, r = {rate:.6%})"
     )
-    for column in ("Payoff", "Settings", "Price", "Std error", "BS price", "z"):
-        table.add_column(column, justify="right" if column in ("Price", "Std error", "BS price", "z") else "left")
+    for column in ("Payoff", "Settings", "Price", "Std error", "BS price", "parity_z (headline)"):
+        table.add_column(column, justify="right" if column in ("Price", "Std error", "BS price", "parity_z (headline)") else "left")
     european = priced["estimates"]["european"]
     table.add_row(
         "European call",
@@ -733,7 +805,7 @@ def print_pricing_table(name: str, spot: float, vol: float, rate: float, maturit
         f"{european['price']:.4f}",
         f"{european['standard_error']:.4f}",
         f"{validation['black_scholes']:.4f}",
-        f"{validation['z']:+.3f}",
+        f"{headline_z:+.3f}",
     )
     asian = priced["estimates"]["asian"]
     table.add_row(
@@ -764,8 +836,15 @@ def print_pricing_table(name: str, spot: float, vol: float, rate: float, maturit
     )
     console.print(table)
     console.print(
-        f"European check for {name.upper()}: MC {validation['price']:.4f} (SE {validation['standard_error']:.4f}) "
-        f"vs Black-Scholes {validation['black_scholes']:.4f}, z = {validation['z']:+.3f} "
+        f"European headline check (testing stream) for {name.upper()}: MC {european['price']:.4f} "
+        f"(SE {european['standard_error']:.4f}) vs Black-Scholes {validation['black_scholes']:.4f}, "
+        f"parity_z = {headline_z:+.3f} "
+        f"({'within' if abs(headline_z) <= MC_Z_LIMIT else 'OUTSIDE'} the {MC_Z_LIMIT:.0f}-SE band)"
+    )
+    console.print(
+        f"European validation check (separate validation stream) for {name.upper()}: "
+        f"MC {validation['price']:.4f} (SE {validation['standard_error']:.4f}) vs Black-Scholes "
+        f"{validation['black_scholes']:.4f}, validation_z = {validation['z']:+.3f} "
         f"({'within' if abs(validation['z']) <= MC_Z_LIMIT else 'OUTSIDE'} the {MC_Z_LIMIT:.0f}-SE band)"
     )
     console.print()
@@ -785,6 +864,8 @@ def build_results(
     priced: dict,
     fit_seconds: float,
 ) -> dict:
+    headline = priced["estimates"]["european"]
+    headline_z = (headline["price"] - validation["black_scholes"]) / headline["standard_error"]
     return {
         "params": {
             "question": "q2",
@@ -823,13 +904,13 @@ def build_results(
                 "price": priced["estimates"]["european"]["price"],
                 "standard_error": priced["estimates"]["european"]["standard_error"],
                 "black_scholes": validation["black_scholes"],
-                "parity_z": validation["z"],
-                "within_parity_band": bool(abs(validation["z"]) <= MC_Z_LIMIT),
+                "parity_z": headline_z,
+                "within_parity_band": bool(abs(headline_z) <= MC_Z_LIMIT),
                 "validation": {
                     "price": validation["price"],
                     "standard_error": validation["standard_error"],
                     "black_scholes": validation["black_scholes"],
-                    "parity_z": validation["z"],
+                    "validation_z": validation["z"],
                 },
             },
             "asian": {
@@ -870,6 +951,8 @@ def save_results(name: str, payload: dict, validation: dict, priced: dict, rmse:
 
 def make_figure(name: str, validation: dict, priced: dict) -> go.Figure:
     history = validation["history"]
+    headline = priced["estimates"]["european"]
+    headline_z = (headline["price"] - validation["black_scholes"]) / headline["standard_error"]
     paths = np.array(history["paths"], dtype=float)
     running = np.array(history["running_price"])
     band = 3.0 * np.array(history["running_standard_error"])
@@ -917,7 +1000,7 @@ def make_figure(name: str, validation: dict, priced: dict) -> go.Figure:
     )
     figure.update_layout(
         title=f"{name.upper()} Q2 approach 1 - {MC_PATHS:,} paths, {priced['simulated']['steps']} daily steps, "
-        f"parity z = {validation['z']:+.3f}",
+        f"headline parity_z = {headline_z:+.3f} (testing stream), validation_z = {validation['z']:+.3f} (validation stream)",
         showlegend=False,
         margin={"t": 120},
     )
@@ -930,6 +1013,8 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--valuation-date", type=date.fromisoformat, default=date(2025, 12, 31), help="calibration cut-off (ISO YYYY-MM-DD, inclusive)")
     parser.add_argument("--maturity-years", type=float, default=1.0, help="discount horizon in years, within the quoted SHIBOR tenor range")
     args = parser.parse_args(argv)
+    if args.seed < 0:
+        parser.error("--seed must be nonnegative")
     if not math.isfinite(args.maturity_years) or args.maturity_years <= 0.0:
         parser.error("--maturity-years must be a positive finite number")
     return args
@@ -1009,8 +1094,8 @@ def main(argv: list[str] | None = None) -> None:
             plain_estimates = price_payoffs(rng_estimators, spot, vol, rate["discount_rate"], args.maturity_years)
             antithetic = antithetic_estimates(rng_estimators, spot, vol, rate["discount_rate"], args.maturity_years)
             control = geometric_cv_asian(rng_estimators, spot, vol, rate["discount_rate"], args.maturity_years)
-            reference = asian_reference_antithetic(rng_analysis, spot, vol, rate["discount_rate"], args.maturity_years)
-            rmse = rmse_study(rng_analysis, spot, vol, rate["discount_rate"], args.maturity_years, reference["price"], validation["black_scholes"])
+            reference = asian_reference(rng_analysis, spot, vol, rate["discount_rate"], args.maturity_years)
+            rmse = rmse_study(rng_analysis, spot, vol, rate["discount_rate"], args.maturity_years, reference, validation["black_scholes"])
             greeks = greek_engine(rng_greeks, spot, vol, rate["discount_rate"], args.maturity_years)
             performance = performance_comparison(spot, vol, rate["discount_rate"], args.maturity_years)
             fit_seconds = time.perf_counter() - started
@@ -1046,10 +1131,13 @@ def main(argv: list[str] | None = None) -> None:
             print_rmse_table(rmse)
             print_performance_table(name, performance)
             console.print("[green]saved[/] " + ", ".join(str(path.relative_to(REPO_ROOT)) for path in saved))
-            if abs(validation["z"]) > MC_Z_LIMIT:
+            headline = priced["estimates"]["european"]
+            headline_z = (headline["price"] - validation["black_scholes"]) / headline["standard_error"]
+            if abs(headline_z) > MC_Z_LIMIT:
                 console.print(
-                    f"[red]parity check failed for {name.upper()}:[/] the daily-step Monte Carlo estimate "
-                    f"deviates {abs(validation['z']):.2f} standard errors from Black-Scholes (limit {MC_Z_LIMIT:.0f})"
+                    f"[red]parity check failed for {name.upper()}:[/] the daily-step Monte Carlo headline price "
+                    f"deviates {abs(headline_z):.2f} standard errors from Black-Scholes (limit {MC_Z_LIMIT:.0f}); "
+                    f"validation_z = {validation['z']:+.3f}"
                 )
                 raise SystemExit(3)
         cash = calibration_window(frames[CASH_INDEX], valuation, CASH_INDEX)

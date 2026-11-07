@@ -1,0 +1,9 @@
+[project]
+name = "mqf-three-question-suite"
+version = "0.1.0"
+description = "Standard-library launcher for separately locked Q1, Q2 and Q4 experiments"
+requires-python = ">=3.13,<3.14"
+dependencies = []
+
+[tool.uv]
+package = false

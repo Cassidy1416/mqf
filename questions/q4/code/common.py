@@ -13,6 +13,81 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def trade_distance(weight: float) -> float:
+    weight = float(weight)
+    if not np.isfinite(weight) or weight <= 0:
+        raise ValueError("Trade distance requires a finite positive weight")
+    return 1.0 / np.log1p(weight)
+
+
+def apply_trade_distance(graph: nx.Graph) -> nx.Graph:
+    for _, _, attributes in graph.edges(data=True):
+        attributes["distance"] = trade_distance(attributes.get("weight", 0.0))
+    return graph
+
+
+def validate_graph(graph: nx.Graph, *, label: str = "graph") -> dict:
+    self_loops = list(nx.selfloop_edges(graph))
+    if self_loops:
+        raise ValueError(f"{label} contains {len(self_loops)} self-loops")
+    invalid: list[str] = []
+    for left, right, attributes in graph.edges(data=True):
+        weight = attributes.get("weight")
+        if weight is None:
+            invalid.append(f"({left},{right}) missing weight")
+        elif not np.isfinite(float(weight)):
+            invalid.append(f"({left},{right}) non-finite weight {weight}")
+        elif float(weight) <= 0.0:
+            invalid.append(f"({left},{right}) non-positive weight {weight}")
+    if invalid:
+        preview = ", ".join(invalid[:10])
+        raise ValueError(f"{label} has {len(invalid)} invalid edge weights; examples: {preview}")
+    return {"nodes": graph.number_of_nodes(), "edges": graph.number_of_edges(), "self_loops": 0, "invalid_weights": 0}
+
+
+def validate_undirected_consistency(directed: nx.DiGraph, undirected: nx.Graph) -> None:
+    expected = undirected_graph(directed)
+    if set(expected.nodes) != set(undirected.nodes) or set(map(frozenset, expected.edges)) != set(map(frozenset, undirected.edges)):
+        raise ValueError("Undirected projection does not preserve the directed graph nodes and edge union")
+    for left, right, attributes in expected.edges(data=True):
+        if not np.isclose(attributes["weight"], undirected[left][right].get("weight", np.nan), rtol=1e-12, atol=0):
+            raise ValueError(f"Reciprocal trade weights were not summed for ({left},{right})")
+
+
+def node_name_map(nodes: list[dict]) -> dict[int, str]:
+    return {row["node_code"]: row["node_name"] for row in nodes}
+
+
+def environment_metadata() -> dict:
+    import platform
+    import sys as _sys
+    import os as _os
+    info: dict = {
+        "python": _sys.version.split()[0],
+        "platform": platform.platform(),
+        "numpy_version": np.__version__,
+        "networkx_version": nx.__version__,
+        "loky_max_cpu_count": _os.environ.get("LOKY_MAX_CPU_COUNT"),
+        "cpu_count": _os.cpu_count(),
+    }
+    try:
+        import torch
+        info["torch_version"] = torch.__version__
+        info["torch_threads"] = torch.get_num_threads()
+    except ImportError:
+        info["torch_version"] = None
+    try:
+        import sklearn
+        info["sklearn_version"] = sklearn.__version__
+    except ImportError:
+        info["sklearn_version"] = None
+    info["residual_nondeterminism"] = (
+        "All randomness is seeded (seed recorded in params); CPU-only torch/scikit-learn operations are deterministic "
+        "for these pinned versions, but BLAS reduction order or parallel scheduling can still produce last-bit float differences."
+    )
+    return info
+
+
 def set_seed(seed: int) -> np.random.Generator:
     random.seed(seed)
     np.random.seed(seed)

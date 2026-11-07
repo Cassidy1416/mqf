@@ -1,53 +1,34 @@
 from __future__ import annotations
-
-import argparse
-import json
+import importlib.util
 from pathlib import Path
-
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from rich.console import Console
 from rich.table import Table
 
-from common import ROOT, save_plot
+ROOT = Path(__file__).resolve().parents[1]
+PROJECT = ROOT.parents[1]
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--results", type=Path, default=ROOT / "results")
-    parser.add_argument("--out", type=Path, default=ROOT / "results" / "comparison.html")
-    args = parser.parse_args()
-    files = sorted(args.results.glob("approach*/**/metrics.json"))
-    records = []
-    for path in files:
-        records.append({"approach": path.parent.parent.name, "path": str(path), "payload": json.loads(path.read_text())})
-    table = Table(title="Q4 comparison")
-    table.add_column("Approach")
-    table.add_column("Fit seconds")
-    table.add_column("Headline metric")
-    for record in records:
-        payload = record["payload"]
-        if record["approach"] == "approach1":
-            years = payload["metrics"].get("years", [])
-            last = payload["metrics"].get("per_year", {}).get(str(max(years)), {}) if years else {}
-            headline = f"modularity={last.get('communities', {}).get('modularity', 'n/a')}"
-        else:
-            dimensions = payload["metrics"].get("dimensions", {})
-            best = payload["metrics"].get("best_sweep")
-            if best is None:
-                best_value = max((item.get("learned", {}).get("auc", 0.0), dimension) for dimension, item in dimensions.items()) if dimensions else (0.0, "n/a")
-                headline = f"best learned AUC={best_value[0]:.3f} (d={best_value[1]})"
-            else:
-                headline = f"best learned AUC={best['auc']:.3f} ({best['configuration']}, d={best['dimension']})"
-        table.add_row(record["approach"], f"{payload.get('fit_seconds', 0.0):.2f}", headline)
-    Console().print(table)
-    figure = go.Figure()
-    for record in records:
-        if record["approach"] == "approach2":
-            dimensions = record["payload"]["metrics"].get("dimensions", {})
-            x = sorted(int(value) for value in dimensions)
-            figure.add_trace(go.Scatter(x=x, y=[dimensions[str(value)]["learned"]["auc"] for value in x], mode="lines+markers", name="node2vec learned AUC"))
-    figure.update_layout(title="Q4 model comparison", xaxis_title="Embedding dimension", yaxis_title="AUC")
-    save_plot(figure, args.out)
+def main():
+    spec = importlib.util.spec_from_file_location("root_comparisons", PROJECT / "code/compare.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    _, all_groups = module.comparable_groups(PROJECT)
+    groups = {title: rows for title, rows in all_groups.items() if title.startswith(ROOT.name.upper())}
+    if not groups:
+        raise ValueError("No comparable, audited results found")
+    chart = make_subplots(rows=len(groups), cols=1, subplot_titles=list(groups))
+    for index, (title, rows) in enumerate(groups.items(), 1):
+        table = Table(title=title)
+        for name in ("Rank", "Method", "Value"):
+            table.add_column(name)
+        for rank, (method, value) in enumerate(rows, 1):
+            table.add_row(str(rank), method, f"{value:.6g}")
+        Console().print(table)
+        chart.add_trace(go.Bar(x=[r[0] for r in rows], y=[r[1] for r in rows], showlegend=False), row=index, col=1)
+    chart.update_layout(height=max(420, 400*len(groups)), title=ROOT.name.upper() + " comparisons within identical evaluation sets")
+    chart.write_html(ROOT / "results/comparison.html", include_plotlyjs=True)
 
 
 if __name__ == "__main__":
