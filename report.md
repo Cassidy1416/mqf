@@ -8,11 +8,11 @@ The source examination document is treated as a requirements reference, rather t
 
 | Name | Student code |
 | --- | --- |
-| Shi Zhan | A0333516J |
-| Shi Mingyang | A0333319H |
-| Shi Luda | A0333534J |
-| Zhang Zhining | A0326815B |
 | Li Ke | A0333306N |
+| Shi Luda | A0333534J |
+| Shi Mingyang | A0333319H |
+| Shi Zhan | A0333516J |
+| Zhang Zhining | A0326815B |
 
 ## Reproduction and comparisons
 

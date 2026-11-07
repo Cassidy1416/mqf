@@ -3,8 +3,8 @@ Requires Python 3.13 and uv, with isolated question folders under `questions/`; 
 Run `python3 run.py all --seed 42`; after dependency installation, use `python3 run.py all --offline --seed 42` for offline reproduction, and see [AGENTS.md](AGENTS.md) for verification, testing and report commands.
 ### Group members
 
-- Shi Zhan - A0333516J
-- Shi Mingyang - A0333319H
-- Shi Luda - A0333534J
-- Zhang Zhining - A0326815B
 - Li Ke - A0333306N
+- Shi Luda - A0333534J
+- Shi Mingyang - A0333319H
+- Shi Zhan - A0333516J
+- Zhang Zhining - A0326815B
