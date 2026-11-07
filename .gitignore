@@ -1,5 +1,6 @@
-.cache/
 .venv/
+questions/*/.venv/
+.cache/
 .env
 .env.*
 !.env.example
@@ -8,4 +9,10 @@ __pycache__/
 *.ipynb
 .DS_Store
 data/raw/
+questions/*/data/raw/
 results/
+questions/*/results/
+.env/
+credentials*
+*.log
+logs/

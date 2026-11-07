@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "questions": {
+    "q1": {
+      "source_url": "git@github.com:micheal021/ap26-q1-vol-surface.git",
+      "commit": "58fbb2d33e7f53dd6948a1ae636621c265e7f8c7",
+      "path": "questions/q1"
+    },
+    "q2": {
+      "source_url": "git@github.com:Cassidy1416/mqf-q2.git",
+      "commit": "7a99293f923c7370e1cfad9a7ea003a63437047f",
+      "path": "questions/q2"
+    },
+    "q4": {
+      "source_url": "git@github.com:micheal021/ap26-q4-trade-network.git",
+      "commit": "5020b6f43bf9c1731a9b8bbf1d2d40bf665c58ed",
+      "path": "questions/q4"
+    }
+  }
+}
