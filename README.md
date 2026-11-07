@@ -1,10 +1,10 @@
 # MQF Advanced Programming: Q1, Q2 and Q4
-One repository, with isolated code, data, results and pinned environments under `questions/q1`, `questions/q2` and `questions/q4`.
-Requires Python 3.13 and uv; run all approaches and comparisons from this root:
-```sh
-python3 run.py all --seed 42
-```
-After installation, use `python3 run.py all --offline --seed 42` for one-command offline reproduction.
-Verify snapshots: `python3 data/fetch.py --offline`; test: `python3 run.py all --stage test --offline` and `python3 -m unittest discover -s tests -v`.
-Rebuild report tables: `python3 code/build_report.py`; see [report](report.md), [audit](docs/REQUIREMENTS_AUDIT.md), [comparisons](results/comparison.html) and [session evidence](SESSION.md).
-The report is a computational draft pending group review; Q1/Q4 historical session gaps and the approved Codex exception are documented.
+Requires Python 3.13 and uv, with isolated question folders under `questions/`; see the [report](report.md), [audit](docs/REQUIREMENTS_AUDIT.md), [comparisons](results/comparison.html) and [session evidence](SESSION.md).
+Run `python3 run.py all --seed 42`; after dependency installation, use `python3 run.py all --offline --seed 42` for offline reproduction, and see [AGENTS.md](AGENTS.md) for verification, testing and report commands.
+### Group members
+
+- Shi Zhan - A0333516J
+- Shi Mingyang - A0333319H
+- Shi Luda - A0333534J
+- Zhang Zhining - A0326815B
+- Li Ke - A0333306N
