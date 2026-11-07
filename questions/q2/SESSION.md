@@ -12941,3 +12941,12 @@ Also update docstrings: line 29 "capped at POSITION_CAP units" → update module
 Edit applied successfully.
 ```
 
+
+## Recovered completion and subsequent repairs
+
+The original OpenCode export above ended before the later Codex completion phase.
+The actual public completion records were subsequently recovered from local session traces, excluding private reasoning and automatic approval-review internals.
+They are preserved as [completion session 1](sessions/codex-completion-1.md) with [JSON](sessions/codex-completion-1.json) and [completion session 2](sessions/codex-completion-2.md) with [JSON](sessions/codex-completion-2.json).
+These are authentic recovered records, not a reconstructed OpenCode conversation.
+The user separately approved direct Codex implementation for the present repairs after the OpenCode provider quota was exhausted.
+The current public repair [Markdown transcript](../../sessions/codex-repairs.md) and [JSON export](../../sessions/codex-repairs.json) record that approval, numerical fixes, validation-stopping changes, tests and full reruns.

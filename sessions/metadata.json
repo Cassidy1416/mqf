@@ -1,0 +1,53 @@
+{
+  "scope": "Authentic saved public session exports; original Q1/Q4 implementation gaps remain documented.",
+  "artifacts": {
+    "sessions/codex-repairs.json": {
+      "sha256": "e4a1bb5b273b8269cc121a2569da27cd27f8f722ef99afd275a81a316125629b",
+      "bytes": 2098265
+    },
+    "sessions/opencode/ses_e4a75060fffegrVrJnNyZIMojp.json": {
+      "sha256": "a5f86e408329b0b42f1a72245b96cfb6d290c574796aa4f8cd83dd271148a759",
+      "bytes": 3776
+    },
+    "sessions/opencode/ses_e49a968daffeoEu5G3qQdoR4GO.json": {
+      "sha256": "2bbbaf84bb7f86bf8a37e7c7c71ea3c54ad22cfc50a632582bc5edae3073d092",
+      "bytes": 416189
+    },
+    "sessions/opencode/ses_e49ac3dc4ffewI8W9AJT5Dth7p.json": {
+      "sha256": "bc503f872797d3d9569e5965966e5e68760a06e2d849296fd04621772308e0f4",
+      "bytes": 487089
+    },
+    "sessions/opencode/ses_e4a725d1fffeL75TtZRFgGFprE.json": {
+      "sha256": "1aeb0461ea09ab4b388b4800a5d6eef55c70a5928c1a2cfa764ec23e862d6283",
+      "bytes": 3808474
+    },
+    "sessions/opencode/ses_e49ad556effek2JwLJieAT5tCh.json": {
+      "sha256": "f0b47b8b6376cd4685affa4425d26a631d99c0d08281dc2ac7fb2550b56f3df8",
+      "bytes": 693947
+    },
+    "sessions/opencode/ses_e4a743b7bffeTF17iD0KyAusqW.json": {
+      "sha256": "156b7327038f3e8c2e4ab5052066d8cf8cb870dfb64d669838c360df4e6dc766",
+      "bytes": 1659335
+    },
+    "sessions/opencode/ses_e4a702a16ffe2kFs6TzH60MieN.json": {
+      "sha256": "afdac243a6cf7697847268e3f1cb2075bdf265d639f2814c94bbc49e23b2353d",
+      "bytes": 476602
+    },
+    "questions/q1/sessions/ses_e49c790d1ffe9um2Z5dkGRz2Qu.json": {
+      "sha256": "1a4900e07619745bf09eaaef88e92590f71c131062c7f56fa9fe64cac366a02b",
+      "bytes": 149855
+    },
+    "questions/q2/sessions/codex-completion-1.json": {
+      "sha256": "93d0e06b0156232f23ca26540498301e1cb0fffa25903f7ea37bc4ebfa8bce32",
+      "bytes": 352018
+    },
+    "questions/q2/sessions/codex-completion-2.json": {
+      "sha256": "8a6a123f960367984351f2dbb89cb33fb2f399c9b8abd5512cfaf78c7607d254",
+      "bytes": 143944
+    },
+    "questions/q4/sessions/ses_e49c77759ffemCv9rXWksKv57B.json": {
+      "sha256": "47d417ec62e434a5e5b48feeb78882005526997492f7465f9e2e4b031a4cfa51",
+      "bytes": 274322
+    }
+  }
+}

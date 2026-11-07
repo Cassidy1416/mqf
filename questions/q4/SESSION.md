@@ -3373,3 +3373,10 @@ python code/compare.py
 ## Sensitive information
 
 No credentials, tokens, private keys, or browser authorization data are recorded.
+
+## Approved subsequent repairs
+
+The user approved the subsequent assignment repairs and direct Codex completion after the OpenCode quota was exhausted.
+The genuine public repair [Markdown transcript](../../sessions/codex-repairs.md) and [JSON export](../../sessions/codex-repairs.json) include the actual prompts, approval, code edits, tool calls and experiment runs.
+The OpenCode record above remains a later documentation/verification session, not the unavailable original implementation conversation.
+See the [requirements audit](../../docs/REQUIREMENTS_AUDIT.md) for repaired items and unresolved submission decisions.
